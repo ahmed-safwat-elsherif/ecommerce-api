@@ -10,12 +10,12 @@ const User = require('../models/userModel')
 
 router.post('/register', async (req, res, next) => {
     try {
-        const { email="", password="", firstname="", lastname="" } = req.body;
         console.log(req.body)
+        const { email="", password="", firstname="", lastname="",gender='male',profileImage='' } = req.body;
         console.log(password.length)
         if(password.length < 6) throw new Error({error:'password accepts only minimum 6 characters'})
         const hash = await bcrypt.hash(password, 7);
-        const user = await User.create({ email, password: hash, firstname, lastname })
+        const user = await User.create({ email, password: hash, firstname, lastname,gender })
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         const confirmationLink = `http://localhost:3000/api/users/confirmation/${token}`;
         const message = `
