@@ -6,6 +6,9 @@ const productSchema = Schema({
         required:true,
         minlength:3
     },
+    createdBy:{
+        type: Schema.Types.ObjectId, ref:'User'
+    },
     current_price:{
         type:Number,
         default:0,

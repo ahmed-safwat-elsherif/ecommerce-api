@@ -36,7 +36,7 @@ router.post('/register', async (req, res, next) => {
             service: 'gmail',
             auth: {
               user: 'amnesia.ecommerce@gmail.com',
-              pass: '0159357eE'  // need to be saved somewhere else to achieve the security
+              pass: process.env.GMAIL_PASS||'0159357eE'  // need to be saved somewhere else to achieve the security
             },
             tls:{
                 rejectUnauthorized:false

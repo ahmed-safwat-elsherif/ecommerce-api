@@ -10,7 +10,8 @@ const userSchema = Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength:8
     },
     gender:{
         type:String,
@@ -43,7 +44,7 @@ const userSchema = Schema({
         type:String,
         validate:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g
     }],
-    favoriteProducts:[{type: Schema.Types.ObjectId, ref:'Product'}],
+    favoriteProducts:[{type: Schema.Types.ObjectId, ref:'Product',unique:true}],
     orders:[
         {
             productId:{type: Schema.Types.ObjectId, ref:'Product'},

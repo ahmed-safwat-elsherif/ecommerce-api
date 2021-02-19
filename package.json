@@ -1,7 +1,7 @@
 {
   "name": "ecommerce-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is the backend RESTful API for 'Amnesia' ecommerce website",
   "main": "index.js",
   "scripts": {
     "start": "node .",

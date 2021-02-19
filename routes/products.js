@@ -9,7 +9,7 @@ router.get('/',async(req,res)=>{
         if (Number(limit) > 15) {
             limit = 15;
         }
-        let products =  await Country.find().skip(Number(skip)).limit(Number(limit)).exec();
+        let products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
         if(!products) throw new Error(`Unabled to find any country to display`)
         res.status(200).send({ length: products.length, products })
     } catch (error) {
@@ -35,6 +35,16 @@ router.post('/product',authenticate,adminAuthenticate, async(req,res)=>{
         res.status(200).send({newProduct,message:"Product was added successfully", success:true})
     } catch (error) {
         res.status(400).send({error,message:"Adding product failed", success:false})
+    }
+})
+// get specific product info
+router.get('/:_id',async(req,res)=>{
+    try {
+        let {_id} = req.params;
+        let product = await Product.findOne({_id});
+        res.status(200).send({product, success:true})
+    } catch (error) {
+        res.status(404).send({message:"product is not found", success:false})
     }
 })
 
