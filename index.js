@@ -34,6 +34,6 @@ app.use(function (err, req, res, next) {
     res.status(500).send('Something broke!')
 })
 
-app.listen(port,()=>{
+app.listen(process.env.PORT||port,()=>{
     console.log(`Server is listening on http://localhost:${port}/`);
 })
