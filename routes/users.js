@@ -87,17 +87,22 @@ router.post('/login', validate, async (req, res, next) => {
     try {
         const { email, password } = req.body;
         console.log({email, password})
+        let all = await User.find();
+        console.log('all',all)
         const user = await User.findOne({ email }).exec();
+        console.log('user:',user)
         if (!user) throw new Error("wrong email or password");
         if (!user.confirmation) throw new Error("Confirmation is needed")
         const isMatched = await bcrypt.compare(password, user.password);
+        console.log(isMatched)
+        
         if (!isMatched) throw new Error("wrong email or password");
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         res.statusCode = 200;
         res.send({ message: "logged in successfully",success:true, email: user.email,fullName:user.fullName, token })
     } catch (error) {
         res.statusCode = 401;
-        res.send({ error: "Invalid credentials",success:false })
+        res.send({ error,message: "Invalid credentials",success:false })
     }
 })
 
