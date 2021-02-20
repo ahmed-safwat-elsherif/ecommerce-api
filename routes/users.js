@@ -8,25 +8,15 @@ const nodemailer = require("nodemailer");
 const User = require('../models/userModel')
 const Product = require('../models/productModel')
 
-
-// router.get('/register',async(req,res)=>{
-//     try {
-        
-//         res.send({success:true})
-//     } catch (error) {
-//         res.send({success:false})
-//     }   
-// })
-
 router.post('/register', async (req, res, next) => {
     try {
         console.log(req.body)
-        const { email="", password="", firstname="", lastname="",gender='male' } = req.body;
+        const { email = "", password = "", firstname = "", lastname = "", gender = 'male' } = req.body;
         console.log(password.length)
-        if(password.length < 6) throw new Error({error:'password accepts only minimum 6 characters'})
+        if (password.length < 6) throw new Error({ error: 'password accepts only minimum 6 characters' })
         const hash = await bcrypt.hash(password, 7);
         console.log("HERERERERERE")
-        const user = await User.create({ email, password: hash, firstname, lastname,gender })
+        const user = await User.create({ email, password: hash, firstname, lastname, gender })
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         const confirmationLink = `https://amnesia-skincare.herokuapp.com/api/users/confirmation/${token}`;
         const message = `
@@ -46,13 +36,13 @@ router.post('/register', async (req, res, next) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'amnesia.ecommerce@gmail.com',
-              pass: process.env.GMAIL_PASS||'0159357eE'  // need to be saved somewhere else to achieve the security
+                user: 'amnesia.ecommerce@gmail.com',
+                pass: process.env.GMAIL_PASS || '0159357eE'  // need to be saved somewhere else to achieve the security
             },
-            tls:{
-                rejectUnauthorized:false
+            tls: {
+                rejectUnauthorized: false
             }
-          });
+        });
 
         // send mail with defined transport object
         let info = await transporter.sendMail({
@@ -65,30 +55,30 @@ router.post('/register', async (req, res, next) => {
 
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-        res.status(201).send({ user,success:true, message: "sent successfully" })
+        res.status(201).send({ user, success: true, message: "sent successfully" })
     } catch (error) {
-        if (error.keyPattern && error.keyPattern.email){
-            console.log(true,{error})
-            res.status(409).send({error,success:false});
+        if (error.keyPattern && error.keyPattern.email) {
+            console.log(true, { error })
+            res.status(409).send({ error, success: false });
             return;
-        } 
-        console.log(false, {error})
-        res.status(422).send({ error,success:false });
+        }
+        console.log(false, { error })
+        res.status(422).send({ error, success: false });
     }
 })
 
-router.get('/confirmation/:token',async(req,res)=>{
+router.get('/confirmation/:token', async (req, res) => {
     try {
-        const {token} = req.params;
-        const {_id} = jwt.verify(token, 'the-attack-titan');
-        console.log({_id});
-        const user = await User.findOneAndUpdate({_id},{confirmation:true},{
+        const { token } = req.params;
+        const { _id } = jwt.verify(token, 'the-attack-titan');
+        console.log({ _id });
+        const user = await User.findOneAndUpdate({ _id }, { confirmation: true }, {
             new: true
         }).exec();
         res.redirect('https://amnesia-skincare.herokuapp.com/confirmed')
-        res.status(200).send({user,success:true,message:"User is confirmed!"})
+        res.status(200).send({ user, success: true, message: "User is confirmed!" })
     } catch (error) {
-        res.status(400).send({error, success:false,message:"Confirmation is denied!"})
+        res.status(400).send({ error, success: false, message: "Confirmation is denied!" })
         res.redirect('https://amnesia-skincare.herokuapp.com/failed')
 
     }
@@ -97,23 +87,23 @@ router.get('/confirmation/:token',async(req,res)=>{
 router.post('/login', validate, async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        console.log({email, password})
+        console.log({ email, password })
         let all = await User.find();
-        console.log('all',all)
+        console.log('all', all)
         const user = await User.findOne({ email }).exec();
-        console.log('user:',user)
+        console.log('user:', user)
         if (!user) throw new Error("wrong email or password");
-        if (!user.confirmation) throw new Error("Confirmation is needed")
+        // if (!user.confirmation) throw new Error("Confirmation is needed")
         const isMatched = await bcrypt.compare(password, user.password);
         console.log(isMatched)
-        
+
         if (!isMatched) throw new Error("wrong email or password");
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         res.statusCode = 200;
-        res.send({ message: "logged in successfully",success:true, email: user.email,fullName:user.fullName, token })
+        res.send({ message: "logged in successfully", success: true, email: user.email, fullName: user.fullName, token })
     } catch (error) {
         res.statusCode = 401;
-        res.send({ error,message: "Invalid credentials",success:false })
+        res.send({ error, message: "Invalid credentials", success: false })
     }
 })
 
@@ -122,80 +112,78 @@ router.get('/profile', authenticate, async (req, res) => {
         const { _id } = req.signData;
         console.log(_id)
         const user = await User.findOne({ _id }).populate('favoriteProducts');
-        res.status(201).send({ user,success:true })
+        res.status(201).send({ user, success: true })
     } catch (error) {
-        res.status(401).send({ error, message: 'user not found',success:false })
+        res.status(401).send({ error, message: 'user not found', success: false })
     }
 })
 
+router.patch('/changePassword', authenticate, async (req, res) => {
+    try {
+        let { _id } = req.signData;
+        console.log(_id);
+        let { password, newPassword } = req.body;
+        let user = await User.findOne({ _id });
+        console.log(user)
+        console.log(password, user.password)
+        let isMatched = await bcrypt.compare(password, user.password);
+        console.log(isMatched)
+        if (!isMatched) {
+            return res.status(401).send({ err: "", success: false, message: "Unauthorized user, wrong password" })
+        }
+
+        password = await bcrypt.hash(newPassword, 7);
+        user.password = password;
+        let newUpdate = await User.findOneAndUpdate({ _id }, user, {
+            new: true
+        }).exec();
+        res.status(200).send({ newUpdate, message: "password has been changed successfully", success: true })
+    } catch (error) {
+        res.status(400).send({ error, message: "Failure in changing password", success: false })
+    }
+})
 router.route('/')
     .delete(authenticate, async (req, res) => {
         try {
             const { _id } = req.signData;
             console.log(res.signData)
-            let user = await User.findOne({_id});
+            let user = await User.findOne({ _id });
             console.log(user)
             await User.deleteOne({ _id });
-            res.status(200).send({ message: "User was deleted successfully", success:true });
+            res.status(200).send({ message: "User was deleted successfully", success: true });
 
         } catch (error) {
-            res.status(401).send({ error,success:false })
+            res.status(401).send({ error, success: false })
         }
     })
     .patch(authenticate, userValidate, async (req, res) => {
         try {
             const { _id } = req.signData;
             console.log(_id)
-            let {email,gender,userPassword,firstname,lastname,addresses,phones} = req.body;
-            let user = await User.findOne({_id});
-            
-             console.log(user)
-             console.log(userPassword,user.password)
-             const isMatched = await bcrypt.compare(userPassword, user.password);
+            let { email, gender, userPassword, firstname, lastname, addresses, phones } = req.body;
+            let user = await User.findOne({ _id });
+
+            console.log(user)
+            console.log(userPassword, user.password)
+            const isMatched = await bcrypt.compare(userPassword, user.password);
             console.log(isMatched)
-            if(!isMatched){
-                return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
+            if (!isMatched) {
+                return res.status(401).send({ err: "", success: false, message: "Unauthorized user, wrong password" })
             }
-            const newUpdate = await User.findOneAndUpdate({ _id },{
-                email,gender,firstname,lastname,addresses,phones,
-                password:user.password, 
-                confirmation:user.confirmation,
-                profileImage:user.profileImage,
-                favoriteProducts:user.favoriteProducts,
-                isAdmin:user.isAdmin
-            } , {
+            const newUpdate = await User.findOneAndUpdate({ _id }, {
+                email, gender, firstname, lastname, addresses, phones,
+                password: user.password,
+                confirmation: user.confirmation,
+                profileImage: user.profileImage,
+                favoriteProducts: user.favoriteProducts,
+                isAdmin: user.isAdmin
+            }, {
                 new: true
             }).exec();
-            if(!newUpdate) throw new Error({error:"Error in updating user info"})
-            res.status(201).send({ message: "user was edited successfully", newUpdate,valid:true,success:true })
+            if (!newUpdate) throw new Error({ error: "Error in updating user info" })
+            res.status(201).send({ message: "user was edited successfully", newUpdate, valid: true, success: true })
         } catch (error) {
-            res.status(401).send({error:"Error in updating user info",success:false}); 
+            res.status(401).send({ error: "Error in updating user info", success: false });
         }
     })
-    
-router.patch('/changePassword',authenticate,async(req,res)=>{
-    try {
-        const { _id } = req.signData;
-        console.log(_id)
-        let {password,newPassword} = req.body;
-        let user = await User.findOne({_id});
-        console.log(user)
-        console.log(password,user.password)
-        const isMatched = await bcrypt.compare(password, user.password);
-        console.log(isMatched)
-        if(!isMatched){
-            return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
-        }
-    
-        password = await bcrypt.hash(newPassword, 7);
-        user.password = password;
-        let newUpdate = await User.findOneAndUpdate({ _id },user,{
-            new: true
-        }).exec();
-        res.status(200).send({newUpdate,message:"password has been changed successfully", success:true})
-    } catch (error) {
-        res.status(400).send({error,message:"Failure in changing password", success:false})
-        
-    }
-})
 module.exports = router;

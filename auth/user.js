@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 module.exports.authenticate = (req, res, next) => {
     try {
         const {authorization} = req.headers;
+        console.log(authorization)
         const signData = jwt.verify(authorization, 'the-attack-titan');
         req.signData = signData;
         next();

@@ -1,9 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const methodOverride = require('method-override');
 const app = express();
+app.use(cors()) // enable it for all routes
 const port = 3000;
 require('./db-connection');
-
 app.use(express.json());
 
 app.use(methodOverride('_method'))

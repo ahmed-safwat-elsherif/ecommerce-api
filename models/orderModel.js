@@ -11,8 +11,13 @@ const orderSchema = Schema({
         type:String,
         default:'Pending',
         enum:['Accepted','Canceled','Pending']
+    },
+    note:{
+        type:String
+    },
+    address:{
+        type:String
     }
-    
 },
 { timestamps: { createdAt: 'createdAt' } })
 

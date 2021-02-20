@@ -31,18 +31,19 @@ const userSchema = Schema({
         minlength: 3,
         maxlength: 50
     },
-    addresses:[{
+    addresses:{
         type:String,
         minlength:3
-    }],
+    },
     profileImage:{
         type:String,
         default:''
     },
-    phones:[{
+    phones:{
         type:String,
-        validate:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g
-    }],
+        default:''
+        // validate:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g
+    },
     favoriteProducts:[{type: Schema.Types.ObjectId, ref:'Product'}],
     isAdmin:{
         type:Boolean,
