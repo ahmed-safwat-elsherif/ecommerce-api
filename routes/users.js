@@ -175,12 +175,22 @@ router.route('/')
 router.patch('/changePassword',authenticate,async(req,res)=>{
     try {
         const { _id } = req.signData;
-        const {newPassword} = req.body;
-        const password = await bcrypt.hash(newPassword, 7);
-        let user = User.findOne({_id});
+        const {password,newPassword} = req.body;
+        let user = await User.findOne({_id});
+        console.log(user)
+        console.log(password,user.password)
+        const isMatched = await bcrypt.compare(password, user.password);
+        console.log(isMatched)
+        if(!isMatched){
+            return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
+        }
+    
+        password = await bcrypt.hash(newPassword, 7);
         user.password = password;
-        await User.findOneAndUpdate({_id},user);
-        res.status(200).send({message:"password has been changed successfully", success:true})
+        let newUpdate = await User.findOneAndUpdate({ _id },user,{
+            new: true
+        }).exec();
+        res.status(200).send({newUpdate,message:"password has been changed successfully", success:true})
     } catch (error) {
         res.status(400).send({error,message:"Failure in changing password", success:false})
         
