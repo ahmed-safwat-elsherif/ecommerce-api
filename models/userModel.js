@@ -44,7 +44,7 @@ const userSchema = Schema({
         type:String,
         validate:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g
     }],
-    favoriteProducts:[{type: Schema.Types.ObjectId, ref:'Product',unique:true}],
+    favoriteProducts:[{type: Schema.Types.ObjectId, ref:'Product'}],
     isAdmin:{
         type:Boolean,
         default:false

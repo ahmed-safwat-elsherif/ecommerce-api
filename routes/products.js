@@ -32,7 +32,6 @@ router.get('/noOfRecords', async (req,res)=>{
     }
 })
 
-
 // POST product
 router.post('/product',authenticate,adminAuthenticate, async(req,res)=>{
     try {
@@ -85,15 +84,61 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         let {_id} = req.params;
         let {rating, userId} = req.body;
         let product = await Product.findOne({_id});
-        let numberOfreviews = product.reviews.length + 1;
-        let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
-        let newUpdate = await Product.findOneAndUpdate({ _id }, { $addToSet: { reviews: [{userId,rating}] } }, {
-            new: true
-        });
-        res.status(200).send({newUpdate,success:true, message:"Product has been deleted successfully"})
+        let found = product.reviews.find(review => review.userId == userId);
+        if(found){
+            let ind = product.reviews.findIndex(review => review.userId == userId);
+            product.reviews[ind].rating = rating;
+            let numberOfreviews = product.reviews.length;
+            let newRating = (Number(rating)+ Number(product.rating) - Number(found.rating))/numberOfreviews;
+            let newUpdate = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews }, {
+                new: true
+            });
+            newUpdate = await Product.findOneAndUpdate({ _id }, {rating:newRating}, {
+                new: true
+            });
+            res.status(200).send({newUpdate,success:true, message:"Product has been deleted successfully"})
+        } else {
+
+            let numberOfreviews = product.reviews.length + 1;
+            let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
+            let newUpdate = await Product.findOneAndUpdate({ _id }, { $addToSet: { reviews: [{userId,rating}] } }, {
+                new: true
+            });
+            newUpdate = await Product.findOneAndUpdate({ _id }, {rating:newRating}, {
+                new: true
+            });
+            res.status(200).send({newUpdate,success:true, message:"Product has been deleted successfully"})
+        }
     } catch (error) {
         res.status(404).send({message:"Error occured !", error,success:false})
     }
 })
 
+// POST to favorites
+router.post('/favorites/:_id',authenticate,async(req,res)=>{
+    try {
+        let{_id} = req.params;
+        let userId = req.signData._id;
+        await User.findOneAndUpdate({_id:userId}, { $addToSet: { favoriteProducts: [_id] } }, {
+            new: true
+        });
+        res.status(200).send({message:"Added to favorite successfully",success:true})
+    } catch (error) {
+        res.status(200).send({message:"Added to favorite successfully",success:false})
+    }
+})
+
+// DELETE from favorite
+router.delete('/favorites/:_id',authenticate,async(req,res)=>{
+    try {
+        let{_id} = req.params;
+        let userId = req.signData._id;
+        await User.findOneAndUpdate({_id:userId}, { $pullAll: { favoriteProducts: [_id] } }, {
+            new: true
+        });
+        res.status(200).send({message:"Added to favorite successfully",success:true})
+    } catch (error) {
+        res.status(200).send({message:"Added to favorite successfully",success:false})
+    }
+})
 module.exports = router

@@ -149,6 +149,7 @@ router.route('/')
             res.status(401).send({error,success:false}); 
         }
     })
+    
 router.patch('/changePassword',authenticate,async(req,res)=>{
     try {
         const { _id } = req.signData;
