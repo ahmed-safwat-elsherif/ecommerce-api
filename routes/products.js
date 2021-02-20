@@ -139,9 +139,9 @@ router.delete('/favorites/:_id',authenticate,async(req,res)=>{
         await User.findOneAndUpdate({_id:userId}, { $pullAll: { favoriteProducts: [_id] } }, {
             new: true
         });
-        res.status(200).send({message:"Added to favorite successfully",success:true})
+        res.status(200).send({message:"Deleted to favorite successfully",success:true})
     } catch (error) {
-        res.status(200).send({message:"Added to favorite successfully",success:false})
+        res.status(200).send({message:"Deletion process was rejected",success:false})
     }
 })
 module.exports = router
