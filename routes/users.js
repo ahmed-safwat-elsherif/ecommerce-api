@@ -21,11 +21,11 @@ const Product = require('../models/productModel')
 router.post('/register', async (req, res, next) => {
     try {
         console.log(req.body)
-        const { email="", password="", firstname="", lastname="",gender='male',profileImage='' } = req.body;
+        const { email="", password="", firstname="", lastname="",gender='male' } = req.body;
         console.log(password.length)
         if(password.length < 6) throw new Error({error:'password accepts only minimum 6 characters'})
         const hash = await bcrypt.hash(password, 7);
-        const user = await User.create({ email, password: hash, firstname, lastname,gender,profileImage })
+        const user = await User.create({ email, password: hash, firstname, lastname,gender })
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         const confirmationLink = `https://amnesia-skincare.herokuapp.com/api/users/confirmation/${token}`;
         const message = `
