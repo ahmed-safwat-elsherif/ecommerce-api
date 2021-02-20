@@ -27,7 +27,8 @@ const productSchema = Schema({
         default:0
     },
     image:{
-        type:String
+        type:String,
+        default:""
     },
     reviews:[{
         userId:{

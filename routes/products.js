@@ -36,7 +36,9 @@ router.get('/noOfRecords', async (req,res)=>{
 router.post('/product',authenticate,adminAuthenticate, async(req,res)=>{
     try {
         let createdBy = req.signData._id;
-        let {name,description} = req.body;
+        let {name,description, current_price=0,old_price=0} = req.body;
+        current_price = Number(current_price);
+        old_price = Number(old_price);
         let newProduct = await Product.create({name,description,createdBy});
         res.status(200).send({newProduct,message:"Product was added successfully", success:true})
     } catch (error) {
