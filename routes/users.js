@@ -176,6 +176,7 @@ router.route('/')
 router.patch('/changePassword',authenticate,async(req,res)=>{
     try {
         const { _id } = req.signData;
+        console.log(_id)
         let {password,newPassword} = req.body;
         let user = await User.findOne({_id});
         console.log(user)
