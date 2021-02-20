@@ -45,17 +45,6 @@ const userSchema = Schema({
         validate:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g
     }],
     favoriteProducts:[{type: Schema.Types.ObjectId, ref:'Product',unique:true}],
-    orders:[
-        {
-            productId:{type: Schema.Types.ObjectId, ref:'Product'},
-            quantity:{type:Number, default:0},
-            status:{
-                type:String,
-                default:'pending',
-                enum:['accepted','rejected','pending']
-            }
-        }
-    ],
     isAdmin:{
         type:Boolean,
         default:false

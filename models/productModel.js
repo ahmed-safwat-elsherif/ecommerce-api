@@ -37,7 +37,16 @@ const productSchema = Schema({
         rating:{
             type:Number,
             required:true
-        }
+        },
+        comment:[{
+            comment:{
+            type:Number
+            },
+            date:{
+                type:Date,
+                default:Date
+            }
+        }]
     }],
     description:{
         type:String,

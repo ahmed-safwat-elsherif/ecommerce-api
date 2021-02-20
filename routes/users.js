@@ -6,7 +6,7 @@ const { validate, userValidate } = require('../validations/userValidate')
 const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const User = require('../models/userModel')
-
+const Product = require('../models/productModel')
 
 router.post('/register', async (req, res, next) => {
     try {
@@ -74,11 +74,11 @@ router.get('/confirmation/:token',async(req,res)=>{
         const user = await User.findOneAndUpdate({_id},{confirmation:true},{
             new: true
         }).exec();
-        res.redirect('https://www.google.com/')
+        res.redirect('https://amnesia-skincare.herokuapp.com/confirmed')
         res.status(200).send({user,success:true,message:"User is confirmed!"})
     } catch (error) {
         res.status(400).send({error, success:false,message:"Confirmation is denied!"})
-        res.redirect('http://localhost:3000/confirmation-failed')
+        res.redirect('https://amnesia-skincare.herokuapp.com/failed')
 
     }
 })
@@ -110,8 +110,8 @@ router.get('/profile', authenticate, async (req, res) => {
     try {
         const { _id } = req.signData;
         console.log(_id)
-        const { email, fullName, todoId, todoGroupId } = await User.findOne({ _id }).populate('todoId todoGroupId');
-        res.status(201).send({ email,fullName, todoId, todoGroupId })
+        const user = await User.findOne({ _id }).populate('todoId todoGroupId');
+        res.status(201).send({ user,success:true })
     } catch (error) {
         res.status(401).send({ error, message: 'user not found',success:false })
     }
@@ -126,9 +126,8 @@ router.route('/')
             console.log(res.signData)
             let user = await User.findOne({_id});
             console.log(user)
-            await Todo.deleteMany({ userId:_id})
-            await TodoGroup.deleteMany({ userId:_id })
             await User.deleteOne({ _id })
+
             res.status(200).send({ message: "User was deleted successfully", success:true });
 
         } catch (error) {
