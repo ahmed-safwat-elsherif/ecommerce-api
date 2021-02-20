@@ -8,6 +8,16 @@ const nodemailer = require("nodemailer");
 const User = require('../models/userModel')
 const Product = require('../models/productModel')
 
+
+router.get('/register',async(req,res)=>{
+    try {
+        
+        res.send({success:true})
+    } catch (error) {
+        res.send({success:false})
+    }   
+})
+
 router.post('/register', async (req, res, next) => {
     try {
         console.log(req.body)
