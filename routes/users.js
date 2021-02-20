@@ -9,14 +9,14 @@ const User = require('../models/userModel')
 const Product = require('../models/productModel')
 
 
-router.get('/register',async(req,res)=>{
-    try {
+// router.get('/register',async(req,res)=>{
+//     try {
         
-        res.send({success:true})
-    } catch (error) {
-        res.send({success:false})
-    }   
-})
+//         res.send({success:true})
+//     } catch (error) {
+//         res.send({success:false})
+//     }   
+// })
 
 router.post('/register', async (req, res, next) => {
     try {
@@ -144,9 +144,14 @@ router.route('/')
     .patch(authenticate, userValidate, async (req, res) => {
         try {
             const { _id } = req.signData;
-            let {email,gender,firstname,lastname,addresses,phones} = req.body;
+            const userPassword = req.body.password;
+            let {email,gender,password,firstname,lastname,addresses,phones} = req.body;
             let {password, confirmation,profileImage,favoriteProducts,isAdmin}
              = await User.findOne({_id});
+            const isMatched = await bcrypt.compare(userPassword, password);
+            if(isMatched){
+                return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
+            }
             const user = await User.findOneAndUpdate({ _id },{
                 email,gender,firstname,lastname,addresses,phones,
                 password, confirmation,profileImage,favoriteProducts,isAdmin
