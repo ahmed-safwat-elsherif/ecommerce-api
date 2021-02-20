@@ -93,13 +93,19 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         let found = product.reviews.find(review => review.userId == userId);
         if(found){
             let ind = product.reviews.findIndex(review => review.userId == userId);
+            console.log("ind",ind)
             product.reviews[ind].rating = rating;
+            console.log("product.reviews",product.reviews)
+
             let numberOfreviews = product.reviews.length;
+            console.log("numberOfreviews",numberOfreviews)
+
             let newRating = (Number(rating)+ Number(product.rating) - Number(found.rating))/numberOfreviews;
-            let newUpdate = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews }, {
-                new: true
-            });
-            newUpdate = await Product.findOneAndUpdate({ _id }, {rating:newRating}, {
+            console.log("rating",rating)
+            console.log("product.rating",product.rating)
+            console.log("found.rating",found.rating)
+            console.log("newRating",newRating)
+            let newUpdate = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
                 new: true
             });
             res.status(200).send({newUpdate,success:true, message:"Product has been deleted successfully"})
