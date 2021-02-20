@@ -148,7 +148,9 @@ router.route('/')
             let {email,gender,firstname,lastname,addresses,phones} = req.body;
             let {password, confirmation,profileImage,favoriteProducts,isAdmin}
              = await User.findOne({_id});
+            
             const isMatched = await bcrypt.compare(userPassword, password);
+            console.log(isMatched)
             if(!isMatched){
                 return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
             }
@@ -161,7 +163,7 @@ router.route('/')
             if(!user) throw new Error({error:"Error in updating user info"})
             res.status(201).send({ message: "user was edited successfully", user,valid:true,success:true })
         } catch (error) {
-            res.status(401).send({error,success:false}); 
+            res.status(401).send({error:"Error in updating user info",success:false}); 
         }
     })
     
