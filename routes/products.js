@@ -56,6 +56,7 @@ router.get('/:_id',async(req,res)=>{
         res.status(404).send({message:"Product is not found", success:false})
     }
 })
+
 // UPDATE product
 router.patch('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
     try {
@@ -81,11 +82,13 @@ router.delete('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
         res.status(404).send({message:"Error occured !", error,success:false})
     }
 })
+
 // POST the rating
 router.post('/rating/:_id',authenticate,async(req,res)=>{
     try {
         let {_id} = req.params;
-        let {rating, userId} = req.body;
+        let userId = req.signData._id;
+        let {rating} = req.body;
         let product = await Product.findOne({_id});
         let found = product.reviews.find(review => review.userId == userId);
         if(found){
