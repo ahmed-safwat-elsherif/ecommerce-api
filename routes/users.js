@@ -144,24 +144,29 @@ router.route('/')
     .patch(authenticate, userValidate, async (req, res) => {
         try {
             const { _id } = req.signData;
-            const userPassword = req.body.password;
-            let {email,gender,firstname,lastname,addresses,phones} = req.body;
-            let {password, confirmation,profileImage,favoriteProducts,isAdmin}
-             = await User.findOne({_id});
+            console.log(_id)
+            let {email,gender,userPassword,firstname,lastname,addresses,phones} = req.body;
+            let user = await User.findOne({_id});
             
-            const isMatched = await bcrypt.compare(userPassword, password);
+             console.log(user)
+             console.log(userPassword,user.password)
+             const isMatched = await bcrypt.compare(userPassword, user.password);
             console.log(isMatched)
             if(!isMatched){
                 return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
             }
-            const user = await User.findOneAndUpdate({ _id },{
+            const newUpdate = await User.findOneAndUpdate({ _id },{
                 email,gender,firstname,lastname,addresses,phones,
-                password, confirmation,profileImage,favoriteProducts,isAdmin
+                password:user.password, 
+                confirmation:user.confirmation,
+                profileImage:user.profileImage,
+                favoriteProducts:user.favoriteProducts,
+                isAdmin:user.isAdmin
             } , {
                 new: true
             }).exec();
-            if(!user) throw new Error({error:"Error in updating user info"})
-            res.status(201).send({ message: "user was edited successfully", user,valid:true,success:true })
+            if(!newUpdate) throw new Error({error:"Error in updating user info"})
+            res.status(201).send({ message: "user was edited successfully", newUpdate,valid:true,success:true })
         } catch (error) {
             res.status(401).send({error:"Error in updating user info",success:false}); 
         }
