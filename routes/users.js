@@ -25,6 +25,7 @@ router.post('/register', async (req, res, next) => {
         console.log(password.length)
         if(password.length < 6) throw new Error({error:'password accepts only minimum 6 characters'})
         const hash = await bcrypt.hash(password, 7);
+        console.log("HERERERERERE")
         const user = await User.create({ email, password: hash, firstname, lastname,gender })
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         const confirmationLink = `https://amnesia-skincare.herokuapp.com/api/users/confirmation/${token}`;
