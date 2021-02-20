@@ -149,7 +149,7 @@ router.route('/')
             let {password, confirmation,profileImage,favoriteProducts,isAdmin}
              = await User.findOne({_id});
             const isMatched = await bcrypt.compare(userPassword, password);
-            if(isMatched){
+            if(!isMatched){
                 return res.status(401).send({err:"",success:false,message:"Unauthorized user, wrong password"})
             }
             const user = await User.findOneAndUpdate({ _id },{
