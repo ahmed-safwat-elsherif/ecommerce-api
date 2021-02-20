@@ -54,7 +54,7 @@ router.post('/user/',authenticate,upload.single('image'), async(req,res)=>{
 })
 
 // POST the product image
-router.post('/product/:_id',upload.single('image'), async(req,res)=>{
+router.post('/product/:_id',authenticate,adminAuthenticate,upload.single('image'), async(req,res)=>{
     let {filename} = req.file;
     let {_id}= req.params;
     let image = await Image.findOne({filename:req.file.filename});
@@ -84,7 +84,7 @@ router.get('/show/:filename',(req,res)=>{
     })
 })
 
-router.delete('/delete/:_id',(req,res)=>{
+router.delete('/delete/:_id',authenticate,adminAuthenticate,(req,res)=>{
     let {_id} = req.params;
     gfs.remove({_id,root:'uploads'},(err,gridStore)=>{
         if(err){
