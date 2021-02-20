@@ -94,17 +94,17 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         if(found){
             let ind = product.reviews.findIndex(review => review.userId == userId);
             console.log("ind",ind)
-            product.reviews[ind].rating = rating;
             console.log("product.reviews",product.reviews)
-
+            
             let numberOfreviews = product.reviews.length;
             console.log("numberOfreviews",numberOfreviews)
-
+            
             let newRating = (Number(rating)+ Number(product.rating) - Number(found.rating))/numberOfreviews;
             console.log("rating",rating)
             console.log("product.rating",product.rating)
             console.log("found.rating",found.rating)
             console.log("newRating",newRating)
+            product.reviews[ind].rating = rating;
             let newUpdate = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
                 new: true
             });
