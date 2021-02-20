@@ -37,8 +37,7 @@ const userSchema = Schema({
         minlength:3
     }],
     profileImage:{
-        type:String,
-        unique:true
+        type:String
     },
     phones:[{
         type:String,
