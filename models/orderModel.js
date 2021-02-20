@@ -4,13 +4,13 @@ const orderSchema = Schema({
     userId:{type: Schema.Types.ObjectId, ref:'Product'},
     adminId:{type: Schema.Types.ObjectId, ref:'Product'},
     products:[{
-        pID:{type: Schema.Types.ObjectId, ref:'Product'},
+        productId:{type: Schema.Types.ObjectId, ref:'Product'},
         quantity:{type:Number, default:0},
     }],
     status:{
         type:String,
-        default:'pending',
-        enum:['accepted','rejected','pending']
+        default:'Pending',
+        enum:['Accepted','Canceled','Pending']
     }
     
 },

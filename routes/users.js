@@ -110,14 +110,12 @@ router.get('/profile', authenticate, async (req, res) => {
     try {
         const { _id } = req.signData;
         console.log(_id)
-        const user = await User.findOne({ _id }).populate('todoId todoGroupId');
+        const user = await User.findOne({ _id }).populate('favoriteProducts');
         res.status(201).send({ user,success:true })
     } catch (error) {
         res.status(401).send({ error, message: 'user not found',success:false })
     }
 })
-
-
 
 router.route('/')
     .delete(authenticate, async (req, res) => {
@@ -126,8 +124,7 @@ router.route('/')
             console.log(res.signData)
             let user = await User.findOne({_id});
             console.log(user)
-            await User.deleteOne({ _id })
-
+            await User.deleteOne({ _id });
             res.status(200).send({ message: "User was deleted successfully", success:true });
 
         } catch (error) {
@@ -136,18 +133,14 @@ router.route('/')
     })
     .patch(authenticate, userValidate, async (req, res) => {
         try {
-            console.log()
             const { _id } = req.signData;
-            let newUpdate = req.body;
-            // if (!newUpdate.password) throw new Error({error: "password should be passed to the body of the request"})
-            let updates = {
-                email:newUpdate.email,
-                fullName:newUpdate.fullName
-            }
-            if (newUpdate.newPassword) {
-                updates.password = await bcrypt.hash(newUpdate.newPassword, 7);
-            }
-            const user = await User.findOneAndUpdate({ _id }, updates, {
+            let {email,gender,firstname,lastname,addresses,phones} = req.body;
+            let {password, confirmation,profileImage,favoriteProducts,isAdmin}
+             = await User.findOne({_id});
+            const user = await User.findOneAndUpdate({ _id },{
+                email,gender,firstname,lastname,addresses,phones,
+                password, confirmation,profileImage,favoriteProducts,isAdmin
+            } , {
                 new: true
             }).exec();
             if(!user) throw new Error({error:"Error in updating user info"})
@@ -156,5 +149,18 @@ router.route('/')
             res.status(401).send({error,success:false}); 
         }
     })
-
-module.exports = router
+router.patch('/changePassword',authenticate,async(req,res)=>{
+    try {
+        const { _id } = req.signData;
+        const {newPassword} = req.body;
+        const password = await bcrypt.hash(newPassword, 7);
+        let user = User.findOne({_id});
+        user.password = password;
+        await User.findOneAndUpdate({_id},user);
+        res.status(200).send({message:"password has been changed successfully", success:true})
+    } catch (error) {
+        res.status(400).send({error,message:"Failure in changing password", success:false})
+        
+    }
+})
+module.exports = router;
