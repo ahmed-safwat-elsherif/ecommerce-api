@@ -5,8 +5,7 @@ const userSchema = Schema({
         type: String,
         required: true,
         unique: true,
-        minlength:5,
-        validate:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+        minlength:5
     },
     password: {
         type: String,
