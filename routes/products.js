@@ -106,7 +106,11 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         } else {
 
             let numberOfreviews = product.reviews.length + 1;
+            console.log("numberOfreviews",numberOfreviews)
             let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
+            console.log("rating",rating)
+            console.log("product.rating",product.rating)
+            console.log("newRating",newRating)
             let newUpdate = await Product.findOneAndUpdate({ _id }, { $addToSet: { reviews: [{userId,rating}] } }, {
                 new: true
             });
