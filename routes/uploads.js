@@ -12,6 +12,7 @@ const Image= require('../models/imageModel')
 const ImageChunk= require('../models/imageChunkModel')
 const Product= require('../models/productModel')
 const connection = require('../db-connection');
+const { authenticate, adminAuthenticate } = require('../auth/user');
 
 
 const storage = new GridFsStorage({
@@ -39,10 +40,10 @@ connection.once('open',()=>{
     gfs.collection('uploads')
 });
 
-// get the profile images
-router.post('/user/:_id',upload.single('image'), async(req,res)=>{
+// POST the profile image
+router.post('/user/',authenticate,upload.single('image'), async(req,res)=>{
     let {filename} = req.file;
-    let {_id}= req.params;
+    let {_id}= req.signData;
     let image = await Image.findOne({filename:req.file.filename});
     let date = new Date(image.uploadDate)
     console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
@@ -52,7 +53,7 @@ router.post('/user/:_id',upload.single('image'), async(req,res)=>{
     res.redirect('/');
 })
 
-// get the product images
+// POST the product image
 router.post('/product/:_id',upload.single('image'), async(req,res)=>{
     let {filename} = req.file;
     let {_id}= req.params;

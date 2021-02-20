@@ -35,10 +35,6 @@ const userSchema = Schema({
         type:String,
         minlength:3
     },
-    profileImage:{
-        type:String,
-        default:''
-    },
     phones:{
         type:String,
         default:''
