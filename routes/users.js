@@ -145,7 +145,7 @@ router.route('/')
         try {
             const { _id } = req.signData;
             const userPassword = req.body.password;
-            let {email,gender,password,firstname,lastname,addresses,phones} = req.body;
+            let {email,gender,firstname,lastname,addresses,phones} = req.body;
             let {password, confirmation,profileImage,favoriteProducts,isAdmin}
              = await User.findOne({_id});
             const isMatched = await bcrypt.compare(userPassword, password);
