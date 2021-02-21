@@ -84,7 +84,7 @@ router.get('/show/:filename',(req,res)=>{
     })
 })
 
-router.delete('/delete/:_id',authenticate,adminAuthenticate,(req,res)=>{
+router.delete('/delete/:_id',authenticate,(req,res)=>{
     let {_id} = req.params;
     gfs.remove({_id,root:'uploads'},(err,gridStore)=>{
         if(err){
