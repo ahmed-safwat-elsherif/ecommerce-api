@@ -5,3 +5,7 @@ const User = require('../models/userModel');
 const Product = require('../models/productModel');
 
 
+router.post('')
+
+
+module.exports = router

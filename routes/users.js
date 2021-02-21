@@ -163,10 +163,10 @@ router.route('/')
             let { email, gender, userPassword, firstname, lastname, addresses, phones } = req.body;
             let user = await User.findOne({ _id });
 
-            console.log(user)
-            console.log(userPassword, user.password)
+            console.log("HERE is USER",user)
+            // console.log(userPassword, user.password)
             const isMatched = await bcrypt.compare(userPassword, user.password);
-            console.log(isMatched)
+            // console.log(isMatched)
             if (!isMatched) {
                 return res.status(401).send({ err: "", success: false, message: "Unauthorized user, wrong password" })
             }

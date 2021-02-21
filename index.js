@@ -15,6 +15,7 @@ app.use(express.static('public'))
 const users = require('./routes/users');
 const uploads = require('./routes/uploads');
 const products = require('./routes/products');
+const orders = require('./routes/orders');
 
 
 app.use((req,res,next)=>{
@@ -27,6 +28,7 @@ app.use((req,res,next)=>{
 app.use('/api/users', users);
 app.use('/api/images',uploads);
 app.use('/api/products',products);
+app.use('/api/orders',orders);
 
 //----------------------------------------------------------------------------------------------------
 
