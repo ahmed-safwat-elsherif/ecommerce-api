@@ -12,11 +12,45 @@ router.post('/',authenticate,async(req,res)=>{
         console.log(userId,req.body)
         let {products, note, address} = req.body;
         let order = await Order.create({products,userId,note,address})
-        res.status(200).send({order,message:"Order is successfully sent", status:true})
+        res.status(200).send({order,message:"Order is successfully sent", success:true})
     } catch (error) {
-        res.status(401).send({message:"Unable to create an order", status:false, error})
+        res.status(401).send({message:"Unable to create an order", success:false, error})
     }
 })
 
+router.get('/',authenticate,async(req,res)=>{
+    try {
+        let userId = req.signData._id;
+        console.log(userId,req.body)
+        let {_id} = req.body;
+        let order = await Order.findOne({_id});
+        res.status(200).send({order,success:true})
+    } catch (error) {
+        res.status(401).send({error,message:"Unable to get order",success:false})
+    }
+})
 
+router.get('/all',authenticate,async(req,res)=>{
+    try {
+        let userId = req.signData._id;
+        let orders = await Order.find({userId});
+        res.status(200).send({orders,success:true})
+    } catch (error) {
+        res.status(401).send({error,message:"Unable to get user's orders",success:false})
+    }
+})
+
+router.patch('/',authenticate,async(req,res)=>{
+    try {
+        let userId = req.signData._id;
+        let {_id} = req.body;
+        let {products,note,address} = req.body;
+        let order = await Order.findOneAndUpdate({_id},{products,note,address},{
+            new:true
+        }).exec();
+        res.status(200).send({order,message:"Order has been updated successfully", success:true})
+    } catch (error) {
+        res.status(401).send({error,message:"Unable to update product", success:false})
+    }
+})
 module.exports = router
