@@ -249,7 +249,7 @@ router.post('/contactus',async(req,res)=>{
         // send mail with defined transport object
         let info = await transporter.sendMail({
             from: '"Amnesia - Skin Care" <amnesia.ecommerce@gmail.com>', // sender address
-            to: email, // list of receivers
+            to: toEmail, // list of receivers
             subject: subject, // Subject line
             text: subject, // plain text body
             html: message, // html body
