@@ -184,8 +184,8 @@ router.post('/forgetPassword',async(req,res)=>{
         let info = await transporter.sendMail({
             from: '"Amnesia - Skin Care" <amnesia.ecommerce@gmail.com>', // sender address
             to: email, // list of receivers
-            subject: "Confirmation", // Subject line
-            text: "Confirmation message", // plain text body
+            subject: "Password Reset", // Subject line
+            text: "Password Reset", // plain text body
             html: message, // html body
         });
 
