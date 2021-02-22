@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const orderSchema = Schema({
     userId:{type: Schema.Types.ObjectId, ref:'User'},
-    adminId:{type: Schema.Types.ObjectId, ref:'Product'},
+    adminId:{type: Schema.Types.ObjectId, ref:'User',default:''},
     products:[{
         productId:{type: Schema.Types.ObjectId, ref:'Product'},
         quantity:{type:Number, default:0},
