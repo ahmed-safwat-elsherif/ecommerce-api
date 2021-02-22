@@ -7,16 +7,21 @@ const orderSchema = Schema({
         productId:{type: Schema.Types.ObjectId, ref:'Product'},
         quantity:{type:Number, default:0},
     }],
-    status:{
+    orderStatus:{
         type:String,
         default:'Pending',
         enum:['Accepted','Canceled','Pending']
     },
     note:{
-        type:String
+        type:String,
+        default:""
     },
     address:{
         type:String
+    },
+    paymentMethod:{
+        type:String,
+        default:"in cash"
     }
 },
 { timestamps: { createdAt: 'createdAt' } })
