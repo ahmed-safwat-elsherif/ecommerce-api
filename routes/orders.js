@@ -43,14 +43,36 @@ router.get('/all',authenticate,async(req,res)=>{
 router.patch('/',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
-        let {_id} = req.body;
-        let {products,note,address} = req.body;
+        let {_id,products,note,address} = req.body;
         let order = await Order.findOneAndUpdate({_id},{products,note,address},{
             new:true
         }).exec();
         res.status(200).send({order,message:"Order has been updated successfully", success:true})
     } catch (error) {
-        res.status(401).send({error,message:"Unable to update product", success:false})
+        res.status(401).send({error,message:"Unable to update order", success:false})
+    }
+})
+
+router.delete('/',authenticate,async(req,res)=>{
+    try {
+        let userId = req.signData._id;
+        let {_id} = req.body;
+        await Order.findOneAndDelete({_id});
+        res.status(200).send({order,message:"Order has been deleted successfully", success:true})
+    } catch (error) {
+        res.status(401).send({error,message:"Unable to delete order", success:false})
+    }
+})
+
+router.patch('/changestatus',authenticate,adminAuthenticate,async(req,res)=>{
+    try {
+        let {_id,orderStatus} = req.body;
+        let order = await Order.findOneAndUpdate({_id},{orderStatus},{
+            new:true
+        }).exec()
+        res.status(200).send({order,message:"Order's status has been updated successfully", success:true})
+    } catch (error) {
+        res.status(401).send({error,message:"Unable to update order's status", success:false})
     }
 })
 module.exports = router
