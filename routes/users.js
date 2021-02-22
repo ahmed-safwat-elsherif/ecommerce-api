@@ -55,6 +55,7 @@ router.post('/register', async (req, res, next) => {
 
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        delete user.password;
         res.status(201).send({ user, success: true, message: "sent successfully" })
     } catch (error) {
         if (error.keyPattern && error.keyPattern.email) {
@@ -76,6 +77,7 @@ router.get('/confirmation/:token', async (req, res) => {
             new: true
         }).exec();
         res.redirect('https://amnesia-skincare.herokuapp.com/views/confirmed')
+        delete user.password;
         res.status(200).send({ user, success: true, message: "User is confirmed!" })
     } catch (error) {
         res.status(400).send({ error, success: false, message: "Confirmation is denied!" })
@@ -100,7 +102,8 @@ router.post('/login', validate, async (req, res, next) => {
         if (!isMatched) throw new Error("wrong email or password");
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         res.statusCode = 200;
-        res.send({ message: "logged in successfully", success: true, email: user.email, fullName: user.fullName, token })
+        delete user.password;
+        res.send({ message: "logged in successfully", success: true,user, token })
     } catch (error) {
         res.statusCode = 401;
         res.send({ error, message: "Invalid credentials", success: false })
@@ -112,6 +115,7 @@ router.get('/profile', authenticate, async (req, res) => {
         const { _id } = req.signData;
         console.log(_id)
         const user = await User.findOne({ _id }).populate('favoriteProducts');
+        delete user.password;
         res.status(201).send({ user, success: true })
     } catch (error) {
         res.status(401).send({ error, message: 'user not found', success: false })
@@ -137,6 +141,7 @@ router.patch('/changePassword', authenticate, async (req, res) => {
         let newUpdate = await User.findOneAndUpdate({ _id }, user, {
             new: true
         }).exec();
+        delete newUpdate.password;
         res.status(200).send({ newUpdate, message: "password has been changed successfully", success: true })
     } catch (error) {
         res.status(400).send({ error, message: "Failure in changing password", success: false })
@@ -191,6 +196,7 @@ router.post('/forgetPassword',async(req,res)=>{
 
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        delete user.password;
         res.status(201).send({ user, success: true, message: "sent successfully" })
     } catch (error) {
         res.status(404).send({message:"Unable to reset password", success:false,error})
@@ -204,6 +210,7 @@ router.get('/reset/password/',authenticate,async(req,res)=>{
         let user = await User.findByIdAndUpdate({_id},{password},{
             new:true
         }).exec();
+        delete user.password;
         res.status(200).send({message:"Password has been changed successfully",success:true,user})
     } catch (error) {
         res.status(400).send({message:"Password failed to be changed",success:false,error})
@@ -248,6 +255,7 @@ router.route('/')
                 new: true
             }).exec();
             if (!newUpdate) throw new Error({ error: "Error in updating user info" })
+            delete newUpdate.password;
             res.status(201).send({ message: "user was edited successfully", newUpdate, valid: true, success: true })
         } catch (error) {
             res.status(401).send({ error: "Error in updating user info", success: false });
