@@ -216,6 +216,54 @@ router.get('/reset/password/',authenticate,async(req,res)=>{
         res.status(400).send({message:"Password failed to be changed",success:false,error})
     }
 })
+
+router.post('/contactus',async(req,res)=>{
+    try {
+        let {email,subject,fullname,message,phone} = req.body;
+        let toEmail = "sheryshawky2018@gmail.com";
+        const message = `
+        <div style="padding:30px 0 ;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;text-align: center; background-color:#eae3c8; color:#383e56; border-radius: 5px;">
+            <p style="font-size:1.3rem; font-weight:bold">
+                Message to <span style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: coral;">Amnesia</span> 
+            </p>
+            <hr style="width:50%;"/>
+            <h3 style="text-align: left; padding-left: 50px; margin-bottom: 2rem;">Message from: ${fullname}</h3>
+            <div style="font-size: 1rem; padding-left: 50px; padding-bottom:20px; text-align: left;">
+                <p>${message}</p>
+                <p>message recieved from: ${email}</p>
+                <p>phone number: ${phone}</p>
+            </div>
+        </div>
+        `
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'amnesia.ecommerce@gmail.com',
+                pass: process.env.GMAIL_PASS || '0159357eE'  // need to be saved somewhere else to achieve the security
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+
+        // send mail with defined transport object
+        let info = await transporter.sendMail({
+            from: '"Amnesia - Skin Care" <amnesia.ecommerce@gmail.com>', // sender address
+            to: email, // list of receivers
+            subject: subject, // Subject line
+            text: subject, // plain text body
+            html: message, // html body
+        });
+
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+        res.status(201).send({success: true, message: "sent successfully" })
+    } catch (error) {
+        res.status(422).send({ error, success: false });
+    }
+})
+
 router.route('/')
     .delete(authenticate, async (req, res) => {
         try {
