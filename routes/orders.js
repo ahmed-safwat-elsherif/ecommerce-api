@@ -10,8 +10,8 @@ router.post('/',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
         console.log(userId,req.body)
-        let {products, note, address} = req.body;
-        let order = await Order.create({products,adminId,userId,orderStatus,note,address})
+        let {products, note, address,adminId=''} = req.body;
+        let order = await Order.create({products,adminId,userId,note,address})
         res.status(200).send({order,message:"Order is successfully sent", status:true})
     } catch (error) {
         res.status(401).send({message:"Unable to create an order", status:false, error})
