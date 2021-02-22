@@ -221,7 +221,7 @@ router.post('/contactus',async(req,res)=>{
     try {
         let {email,subject,fullname,message,phone} = req.body;
         let toEmail = "sheryshawky2018@gmail.com";
-        const message = `
+        const fullmessage = `
         <div style="padding:30px 0 ;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;text-align: center; background-color:#eae3c8; color:#383e56; border-radius: 5px;">
             <p style="font-size:1.3rem; font-weight:bold">
                 Message to <span style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: coral;">Amnesia</span> 
@@ -252,7 +252,7 @@ router.post('/contactus',async(req,res)=>{
             to: toEmail, // list of receivers
             subject: subject, // Subject line
             text: subject, // plain text body
-            html: message, // html body
+            html: fullmessage, // html body
         });
 
         console.log("Message sent: %s", info.messageId);
