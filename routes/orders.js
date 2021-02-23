@@ -5,9 +5,11 @@ const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const Order = require('../models/orderModel');
 
+// sdfds 
 
 router.post('/',authenticate,async(req,res)=>{
     try {
+        console.log("//")
         let userId = req.signData._id;
         console.log(userId,req.body)
         let {products, note, address} = req.body;
