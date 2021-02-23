@@ -210,6 +210,7 @@ router.post('/reset/password',authenticate,async(req,res)=>{
     try {
         let {_id} = req.signData;
         let {password} = req.body;
+        console.log("USER ID : ",_id)
         let user = await User.findByIdAndUpdate({_id},{password},{
             new:true
         }).exec();

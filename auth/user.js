@@ -5,6 +5,7 @@ module.exports.authenticate = (req, res, next) => {
         const {authorization} = req.headers;
         console.log(authorization)
         const signData = jwt.verify(authorization, 'the-attack-titan');
+        console.log("signData:",)
         req.signData = signData;
         next();
     } catch (error) {
