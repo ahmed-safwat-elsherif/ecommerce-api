@@ -67,6 +67,7 @@ router.post('/product/:productId',authenticate,adminAuthenticate,upload.single('
     try {
         let {filename} = req.file;
         let {productId} = req.params;
+        console.log(productId)
         let image = await Image.findOne({filename:req.file.filename});
         let date = new Date(image.uploadDate)
         console.log(image)
