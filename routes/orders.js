@@ -25,7 +25,7 @@ router.get('/',authenticate,async(req,res)=>{
         let userId = req.signData._id;
         console.log(userId,req.body)
         let {_id} = req.body;
-        let order = await Order.findOne({_id});
+        let order = await Order.findOne({_id}).populate('productId');
         res.status(200).send({order,success:true})
     } catch (error) {
         res.status(401).send({error,message:"Unable to get order",success:false})
