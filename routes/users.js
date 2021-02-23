@@ -205,7 +205,7 @@ router.post('/forgetPassword',async(req,res)=>{
     }
 })
 
-router.get('/reset/password/',authenticate,async(req,res)=>{
+router.post('/reset/password/',authenticate,async(req,res)=>{
     try {
         let {_id} = req.signData;
         let {password} = req.body;
