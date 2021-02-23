@@ -35,7 +35,7 @@ router.get('/',authenticate,async(req,res)=>{
 router.get('/all',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
-        let orders = await Order.find({userId});
+        let orders = await Order.find({userId}).populate('products.productId');
         res.status(200).send({orders,success:true})
     } catch (error) {
         res.status(401).send({error,message:"Unable to get user's orders",success:false})
