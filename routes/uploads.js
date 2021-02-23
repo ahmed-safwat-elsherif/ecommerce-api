@@ -47,12 +47,16 @@ router.post('/user',authenticate,upload.single('image'), async(req,res)=>{
         let {_id}= req.signData;
         let image = await Image.findOne({filename:req.file.filename});
         let date = new Date(image.uploadDate)
+        console.log(image)
+        let user = await User.findOneAndUpdate({_id},{profileImage:image.filename},{
+            new:true
+        }).exec()
         console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
         // await User.findOneAndUpdate({_id},{profileImage:filename},{
         //     new: true
         // }).exec();
         // res.redirect('/');
-        res.status(200).send({image,message:"Uploaded successfully", success:true})
+        res.status(200).send({user,image,message:"Uploaded successfully", success:true})
     } catch (error) {
         res.status(404).send({error,message:"Unable to upload", success:false})
     }
@@ -60,15 +64,24 @@ router.post('/user',authenticate,upload.single('image'), async(req,res)=>{
 
 // POST the product image
 router.post('/product',authenticate,adminAuthenticate,upload.single('image'), async(req,res)=>{
-    let {filename} = req.file;
-    let {_id}= req.signData;
-    let image = await Image.findOne({filename:req.file.filename});
-    let date = new Date(image.uploadDate)
-    console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
-    await Product.findOneAndUpdate({_id},{profileImage:filename},{
-        new: true
-    }).exec();
-    res.redirect('/');
+    try {
+        let {filename} = req.file;
+        let {_id}= req.signData;
+        let {productId} = req.body;
+        let image = await Image.findOne({filename:req.file.filename});
+        let date = new Date(image.uploadDate)
+        console.log(image)
+        let product = await Product.findOneAndUpdate({_id:productId},{profileImage:image.filename},{
+            new:true
+        }).exec()
+        console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
+        await Product.findOneAndUpdate({_id},{profileImage:filename},{
+            new: true
+        }).exec();
+        res.status(200).send({product,image,message:"Uploaded successfully", success:true})
+    } catch (error) {
+        res.status(404).send({error,message:"Unable to upload", success:false})
+    }
 })
 
 //To get and show any image
