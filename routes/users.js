@@ -153,12 +153,12 @@ router.patch('/changePassword', authenticate, async (req, res) => {
 router.post('/forgetPassword',async(req,res)=>{
     try {
         let {email} = req.body;
-        let {_id} = await User.findOne({email});user
-        console.log("USER :" ,_id)
-        if(!_id){
+        let user = await User.findOne({email});
+        console.log("USER :" ,user)
+        if(!user){
             return res.status(404).send({message:"Email is not registered", success:false})
         }
-        const token = jwt.sign({ _id}, 'the-attack-titan'); // expiration json web token in 2 hours
+        const token = jwt.sign({ _id:user._id}, 'the-attack-titan'); // expiration json web token in 2 hours
         const forgetPassword = `http://localhost:4200/resetpassword/${token}`;
         const message = `
         <div style="padding:30px 0 ;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;text-align: center; background-color:#eae3c8; color:#383e56; border-radius: 5px;">
@@ -200,7 +200,7 @@ router.post('/forgetPassword',async(req,res)=>{
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         delete user.password;
-        res.status(201).send({ _id, success: true, message: "sent successfully" })
+        res.status(201).send({ user, success: true, message: "sent successfully" })
     } catch (error) {
         res.status(404).send({message:"Unable to reset password", success:false,error})
     }
