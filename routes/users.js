@@ -212,6 +212,7 @@ router.post('/reset/password/',authenticate,async(req,res)=>{
         let user = await User.findByIdAndUpdate({_id},{password},{
             new:true
         }).exec();
+        console.log(user)
         delete user.password;
         res.status(200).send({message:"Password has been changed successfully",success:true,user})
     } catch (error) {
