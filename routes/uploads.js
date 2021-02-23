@@ -63,11 +63,10 @@ router.post('/user',authenticate,upload.single('image'), async(req,res)=>{
 })
 
 // POST the product image
-router.post('/product',authenticate,adminAuthenticate,upload.single('image'), async(req,res)=>{
+router.post('/product/:productId',authenticate,adminAuthenticate,upload.single('image'), async(req,res)=>{
     try {
         let {filename} = req.file;
-        let {_id}= req.signData;
-        let {productId} = req.body;
+        let {productId} = req.params;
         let image = await Image.findOne({filename:req.file.filename});
         let date = new Date(image.uploadDate)
         console.log(image)
@@ -75,7 +74,7 @@ router.post('/product',authenticate,adminAuthenticate,upload.single('image'), as
             new:true
         }).exec()
         console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
-        await Product.findOneAndUpdate({_id},{image:filename},{
+        await Product.findOneAndUpdate({_id:productId},{image:filename},{
             new: true
         }).exec();
         res.status(200).send({product,image,message:"Uploaded successfully", success:true})
