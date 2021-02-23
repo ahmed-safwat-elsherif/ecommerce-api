@@ -95,7 +95,9 @@ router.post('/login', validate, async (req, res, next) => {
         const user = await User.findOne({ email }).exec();
         console.log('user:', user)
         if (!user) throw new Error("wrong email or password");
-        if (!user.confirmation) throw new Error("Confirmation is needed")
+        if (!user.confirmation){
+            return res.status(400).send({success:false,message:"Confirmation is required"})
+        }
         const isMatched = await bcrypt.compare(password, user.password);
         console.log(isMatched)
 
