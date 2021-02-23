@@ -154,6 +154,7 @@ router.post('/forgetPassword',async(req,res)=>{
     try {
         let {email} = req.body;
         let user = await User.findOne({email});
+        console.log(user)
         if(!user){
             return res.status(404).send({message:"Email is not registered", success:false})
         }
