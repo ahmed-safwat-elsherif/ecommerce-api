@@ -75,7 +75,7 @@ router.post('/product',authenticate,adminAuthenticate,upload.single('image'), as
             new:true
         }).exec()
         console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
-        await Product.findOneAndUpdate({_id},{profileImage:filename},{
+        await Product.findOneAndUpdate({_id},{image:filename},{
             new: true
         }).exec();
         res.status(200).send({product,image,message:"Uploaded successfully", success:true})
