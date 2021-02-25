@@ -40,6 +40,13 @@
         fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
     </script>
-    <script src="/public/loginFB.js"></script>
+    <script>
+        document.getElementsByTagName('button')[0].addEventListener('click',()=>{
+            console.log("Clicked")
+            FB.getLoginStatus(response =>{
+                console.log(response)
+            });
+        })
+    </script>
 </body>
 </html>
