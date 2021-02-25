@@ -20,11 +20,11 @@ router.post('/',authenticate,async(req,res)=>{
     }
 })
 
-router.get('/',authenticate,async(req,res)=>{
+router.get('/:_id',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
         console.log(userId,req.body)
-        let {_id} = req.body;
+        let {_id} = req.params;
         let order = await Order.findOne({_id}).populate('products.productId');
         res.status(200).send({order,success:true})
     } catch (error) {
