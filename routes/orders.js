@@ -20,7 +20,7 @@ router.post('/',authenticate,async(req,res)=>{
     }
 })
 
-router.get('/:_id',authenticate,async(req,res)=>{
+router.get('/order/:_id',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
         console.log(userId,req.body)
