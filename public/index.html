@@ -44,7 +44,11 @@
         document.getElementsByTagName('button')[0].addEventListener('click',()=>{
             console.log("Clicked")
             FB.getLoginStatus(response =>{
-                console.log(response)
+                if(status== "not_authorized"){
+                    FB.login(res=>{
+                        console.log(res)
+                    },{scope:"public_profile,email"})
+                }
             });
         })
     </script>
