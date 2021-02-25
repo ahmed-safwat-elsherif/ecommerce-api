@@ -12,6 +12,8 @@ router.post('/register', async (req, res, next) => {
     try {
         console.log(req.body)
         const { email = "", password = "", firstname = "", lastname = "", gender = 'male', profileImage='4' } = req.body;
+        let exists = await User.count({email});
+        console.log(exists)
         console.log(password.length)
         if (password.length < 6) throw new Error({ error: 'password accepts only minimum 6 characters' })
         const hash = await bcrypt.hash(password, 7);
