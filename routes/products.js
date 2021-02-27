@@ -106,6 +106,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             // console.log("product.rating",product.rating)
             // console.log("found.rating",found.rating)
             // console.log("newRating",newRating)
+            newRating = Math.round(newRating)
             let newUpdate = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
                 new: true
             });
@@ -116,6 +117,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             // console.log("numberOfreviews",numberOfreviews)
             let toNumbers = product.reviews.map(review=>Number(review.rating));
             let newRating = (toNumbers.reduce((tot,num)=>tot+num)+rating) / numberOfreviews;
+            newRating = Math.round(newRating)
 
             // let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
             // console.log("rating",rating)
