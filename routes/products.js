@@ -107,9 +107,9 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             console.log("found.rating",found.rating)
             console.log("newRating",newRating)
             console.length(product)
-            // product = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
-            //     new: true
-            // });
+            product = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
+                new: true
+            });
             res.status(200).send({product,success:true, message:"Product has been deleted successfully"})
         } else {
 
