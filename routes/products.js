@@ -106,7 +106,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             console.log("product.rating",product.rating)
             console.log("found.rating",found.rating)
             console.log("newRating",newRating)
-            console.length(product)
+            console.log(product)
             product = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
                 new: true
             });
@@ -123,7 +123,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             // console.log("rating",rating)
             // console.log("product.rating",product.rating)
             // console.log("newRating",newRating)
-            console.length(product)
+            console.log(product)
             product = await Product.findOneAndUpdate({ _id }, { $addToSet: { reviews: [{userId,rating,comment:[]}] } }, {
                 new: true
             });
