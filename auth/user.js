@@ -9,8 +9,7 @@ module.exports.authenticate = (req, res, next) => {
         req.signData = signData;
         next();
     } catch (error) {
-        res.statusCode = 401;
-        res.send({success: false, error:"Authorization failed"});
+        res.status(401).send({success: false, error:"Authorization failed"});
     }
 }
 module.exports.adminAuthenticate = (req, res, next) => {
