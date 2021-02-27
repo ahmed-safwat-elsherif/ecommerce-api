@@ -93,18 +93,19 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         let found = product.reviews.find(review => review.userId == userId);
         if(found){
             let ind = product.reviews.findIndex(review => review.userId == userId);
-            console.log("ind",ind)
-            console.log("product.reviews",product.reviews)
-            
+            // console.log("ind",ind)
+            // console.log("product.reviews",product.reviews)
+            product.reviews[ind].ratings = rating;
             let numberOfreviews = product.reviews.length;
             console.log("numberOfreviews",numberOfreviews)
             
-            let newRating = (Number(rating)+ Number(product.rating) - Number(found.rating))/numberOfreviews;
-            console.log("rating",rating)
-            console.log("product.rating",product.rating)
-            console.log("found.rating",found.rating)
-            console.log("newRating",newRating)
-            product.reviews[ind].rating = rating;
+            // let newRating = (Number(rating)+ Number(product.rating) - Number(found.rating))/numberOfreviews;
+            let toNumbers = product.reviews.map(review=>Number(review.rating));
+            let newRating = toNumbers.reduce((tot,num)=>tot+num) / toNumbers.length;
+            // console.log("rating",rating)
+            // console.log("product.rating",product.rating)
+            // console.log("found.rating",found.rating)
+            // console.log("newRating",newRating)
             let newUpdate = await Product.findOneAndUpdate({ _id }, { reviews: product.reviews,rating:newRating }, {
                 new: true
             });
@@ -112,12 +113,15 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         } else {
 
             let numberOfreviews = product.reviews.length + 1;
-            console.log("numberOfreviews",numberOfreviews)
-            let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
-            console.log("rating",rating)
-            console.log("product.rating",product.rating)
-            console.log("newRating",newRating)
-            let newUpdate = await Product.findOneAndUpdate({ _id }, { $addToSet: { reviews: [{userId,rating}] } }, {
+            // console.log("numberOfreviews",numberOfreviews)
+            let toNumbers = product.reviews.map(review=>Number(review.rating));
+            let newRating = (toNumbers.reduce((tot,num)=>tot+num)+rating) / numberOfreviews;
+
+            // let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
+            // console.log("rating",rating)
+            // console.log("product.rating",product.rating)
+            // console.log("newRating",newRating)
+            let newUpdate = await Product.findOneAndUpdate({ _id }, { $addToSet: { reviews: [{userId,rating,comment:[]}] } }, {
                 new: true
             });
             newUpdate = await Product.findOneAndUpdate({ _id }, {rating:newRating}, {
