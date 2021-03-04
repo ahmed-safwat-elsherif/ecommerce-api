@@ -3,6 +3,7 @@ const cors = require('cors');
 const methodOverride = require('method-override');
 const app = express();
 const port = 3000;
+app.use(cors()) // enable it for all routes
 const bodyParser = require('body-parser')
 require('./db-connection');
 app.use(bodyParser.json({
@@ -14,7 +15,6 @@ app.use(bodyParser.urlencoded({
     parameterLimit: 100000,
     extended: true
 }));
-app.use(cors()) // enable it for all routes
 app.use(express.json());
 
 app.use(methodOverride('_method'))
