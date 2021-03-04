@@ -8,12 +8,12 @@ const bodyParser = require('body-parser')
 require('./db-connection');
 app.use(bodyParser.json());
 
-// app.use(bodyParser.urlencoded({
-//     limit: '50mb',
-//     parameterLimit: 100000,
-//     extended: true
-// }));
-// app.use(express.json());
+app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    parameterLimit: 100000,
+    extended: true
+}));
+app.use(express.json());
 
 app.use(methodOverride('_method'))
 
