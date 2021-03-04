@@ -43,6 +43,7 @@ connection.once('open',()=>{
 // POST the profile image
 router.post('/user',authenticate,upload.single('image'), async(req,res)=>{
     try {
+        console.log("Uploading ...... ")
         let {filename} = req.file;
         let {_id}= req.signData;
         let image = await Image.findOne({filename:req.file.filename});
