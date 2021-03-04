@@ -3,6 +3,7 @@ const cors = require('cors');
 const methodOverride = require('method-override');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser')
 require('./db-connection');
 app.use(bodyParser.json({
     limit: '50mb'
