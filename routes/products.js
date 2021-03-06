@@ -7,9 +7,9 @@ const Product = require('../models/productModel');
 // get all products (from 0 to 15 with a skip)
 router.get('/',async(req,res)=>{
     try {
-        let { limit = 15, skip = 0 } = req.query;
-        if (Number(limit) > 15) {
-            limit = 15;
+        let { limit = 10, skip = 0 } = req.query;
+        if (Number(limit) > 10) {
+            limit = 10;
         }
         let products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
         if(!products) throw new Error(`Unabled to find any country to display`)
