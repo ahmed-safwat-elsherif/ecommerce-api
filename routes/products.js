@@ -11,9 +11,10 @@ router.get('/',async(req,res)=>{
         if (Number(limit) > 10) {
             limit = 10;
         }
+        let numOfProducts =  await Product.countDocuments().exec();
         let products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
         if(!products) throw new Error(`Unabled to find any country to display`)
-        res.status(200).send({ length: products.length, products })
+        res.status(200).send({ length: numOfProducts, products })
     } catch (error) {
         res.status(401).send(error)
     }
