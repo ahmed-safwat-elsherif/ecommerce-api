@@ -5,7 +5,7 @@ module.exports.authenticate = (req, res, next) => {
         const {authorization} = req.headers;
         console.log(authorization)
         const signData = jwt.verify(authorization, 'the-attack-titan');
-        console.log("signData:",)
+        console.log("signData:",signData)
         req.signData = signData;
         next();
     } catch (error) {
@@ -14,8 +14,9 @@ module.exports.authenticate = (req, res, next) => {
 }
 module.exports.adminAuthenticate = (req, res, next) => {
     const {authorization} = req.headers;
+    const _id = req.signData._id;
     const signData = jwt.verify(authorization, 'the-attack-titan');
-    User.findOne({_id:signData._id},(err,user)=>{
+    User.findOne({_id},(err,user)=>{
         if(err){
             return res.status(404).send({success:false,err,message:"Authentication failed"})
         }
