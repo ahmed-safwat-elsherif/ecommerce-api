@@ -274,7 +274,7 @@ router.post('/contactus',async(req,res)=>{
     }
 })
 // Get all users in back-end 
-router.get('/get/users',authenticate,adminAuthenticate,(req,res)=>{
+router.get('/get/users',authenticate,adminAuthenticate,async(req,res)=>{
     try {
         let { limit = 10, skip = 0 } = req.query;
         if (Number(limit) > 10) {
