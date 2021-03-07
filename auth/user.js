@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const mongoose = require('mongoose')
 module.exports.authenticate = (req, res, next) => {
     try {
         const {authorization} = req.headers;
