@@ -30,8 +30,10 @@ module.exports.adminAuthenticate = (req, res, next) => {
         console.log("USER:",user)
         if(user){
             if(!user.isAdmin){
+                console.log("Is not admin")
                 return res.status(401).send({success:false,message:"Admin Authentication failed"})
             } else {
+                console.log("Is admin")
                 next();
             }
         } else {
