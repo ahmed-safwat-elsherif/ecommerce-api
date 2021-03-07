@@ -33,7 +33,7 @@ module.exports.adminAuthenticate = (req, res, next) => {
                 return res.status(401).send({success:false,message:"Admin Authentication failed"})
             }
         }
-        req.signData = signData;
+        // req.signData = signData;
     })
     next();
 }
