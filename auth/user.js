@@ -20,7 +20,7 @@ module.exports.adminAuthenticate = (req, res, next) => {
     console.log("_id:",_id)
     _id = mongoose.Types.ObjectId(_id)
     console.log("_id:",_id)
-    User.findById({_id},(err,user)=>{
+    User.findById({_id:"604089f23de5460015a7e3ea"},(err,user)=>{
         console.log(user)
     })
     User.findOne({_id},(err,user)=>{
