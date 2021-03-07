@@ -20,20 +20,23 @@ module.exports.adminAuthenticate = (req, res, next) => {
     console.log("_id:",_id)
     _id = mongoose.Types.ObjectId(_id)
     console.log("_id:",_id)
-    User.findById({_id:"604089f23de5460015a7e3ea"},(err,user)=>{
-        console.log(user)
-    })
-    User.findOne({_id},(err,user)=>{
+    // User.findById({_id:"604089f23de5460015a7e3ea"},(err,user)=>{
+    //     console.log(user)
+    // })
+    User.findById({_id},(err,user)=>{
         if(err){
             return res.status(404).send({success:false,err,message:"Authentication failed"})
         }
-        console.log(user)
+        console.log("USER:",user)
         if(user){
             if(!user.isAdmin){
                 return res.status(401).send({success:false,message:"Admin Authentication failed"})
+            } else {
+                next();
             }
+        } else {
+            return res.status(401).send({success:false,message:"Admin Authentication failed"})
         }
         // req.signData = signData;
     })
-    next();
 }
