@@ -20,6 +20,14 @@ router.get('/',async(req,res)=>{
     }
 })
 
+router.get('/get/all',async(req,res)=>{
+    try {
+        let products = await products.find();
+        res.status(200).send({products, success:true,message:"ALL PRODUCTS RETRIEVED SUCCESSFULLY"});
+    } catch (error) {
+        res.status(400).send({error,message:"failed to retrieve"})
+    }
+})
 
 // GET number of products
 router.get('/noOfRecords', async (req,res)=>{
