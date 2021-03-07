@@ -21,18 +21,15 @@ module.exports.adminAuthenticate = async (req, res, next) => {
         _id = mongoose.Types.ObjectId(_id)
         console.log("_id:", _id)
         let user = await User.findById({ _id });
-        if (user) {
-            if (!user.isAdmin) {
-                console.log("Is not admin")
-                res.status(401).send("ERROR")
-                // .send({ success: false, message: "Admin Authentication failed" })
-            } else {
-                console.log("Is admin")
-                next()
-            }
-        } else {
-            return res.status(401).send({ success: false, message: "Admin Authentication failed" })
+        if(!user){
+            return res.status(404).send({message:"no user found", success:false})
         }
+        if (!user.isAdmin) {
+            console.log("Is not admin")
+            return res.status(401).send({ success: false, message: "Admin Authentication failed" })
+        } 
+        console.log("Is admin")
+        next()
     } catch (error) {
         res.status(404).send({ success: false, error, message: "Authentication failed" })
     }
