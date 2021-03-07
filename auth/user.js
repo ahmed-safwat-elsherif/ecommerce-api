@@ -16,6 +16,7 @@ module.exports.adminAuthenticate = (req, res, next) => {
     const {authorization} = req.headers;
     const _id = req.signData._id;
     const signData = jwt.verify(authorization, 'the-attack-titan');
+    console.log(_id)
     User.findOne({_id},(err,user)=>{
         if(err){
             return res.status(404).send({success:false,err,message:"Authentication failed"})
