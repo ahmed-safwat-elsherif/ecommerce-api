@@ -10,7 +10,7 @@ const orderSchema = Schema({
     orderStatus:{
         type:String,
         default:'Pending',
-        enum:['Accepted','Canceled','Pending']
+        enum:['accepted','canceled','pending']
     },
     note:{
         type:String,

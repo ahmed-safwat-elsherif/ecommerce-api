@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt');
-const { authenticate } = require('../auth/user');
+const { authenticate, adminAuthenticate } = require('../auth/user');
 const { validate, userValidate } = require('../validations/userValidate')
 const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
@@ -273,7 +273,21 @@ router.post('/contactus',async(req,res)=>{
         res.status(422).send({ error, success: false });
     }
 })
-
+// Get all users in back-end 
+router.get('/get/users',authenticate,adminAuthenticate,(req,res)=>{
+    try {
+        let { limit = 10, skip = 0 } = req.query;
+        if (Number(limit) > 10) {
+            limit = 10;
+        }
+        let numOfUsers =  await User.countDocuments().exec();
+        let users =  await User.find().skip(Number(skip)).limit(Number(limit)).exec();
+        if(!users) throw new Error(`Unabled to find users to display`)
+        res.status(200).send({ length: numOfUsers, users })
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
 router.route('/')
     .delete(authenticate, async (req, res) => {
         try {

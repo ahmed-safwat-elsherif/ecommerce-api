@@ -20,6 +20,39 @@ router.post('/',authenticate,async(req,res)=>{
     }
 })
 
+/// Get all orders with limit skip , filtered with status
+router.get('/all/:status',authenticate,adminAuthenticate,async(req,res)=>{
+    try {
+        let {status} = req.params;
+        if(!['accepted','canceled','pending'].includes(status)){
+            return res.status(404).send({success:false,message:"Check the status param"})
+        }
+        let { limit = 10, skip = 0 } = req.query;
+        if (Number(limit) > 10) {
+            limit = 10;
+        }
+        let numOfOrders =  await Order.countDocuments().exec();
+        let orders =  await Order.find({status}).skip(Number(skip)).limit(Number(limit)).exec();
+        if(!orders) throw new Error(`Unabled to find orders to display`)
+        res.status(200).send({ length: numOfOrders, orders })
+        // let orders = await Order.find({status})
+    } catch (error) {
+        res.status(401).send({message:"Unabled to find orders to display",error})
+    }
+})
+
+// Find all orders per user
+router.get('/for/:userId',authenticate,adminAuthenticate,async(req,res)=>{
+    try {
+        let {userId} = req.params;
+        let user = await User.find({_id:userId})
+        let orders = await Order.find({userId});
+        res.status(200).send({orders, userId,user,message:"Orders fetched successfully", success:true})
+    } catch (error) {
+        res.status(401).send({error,message:"Orders fetching failed", success:false})
+    }
+})
+
 router.get('/order/:_id',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
@@ -32,15 +65,15 @@ router.get('/order/:_id',authenticate,async(req,res)=>{
     }
 })
 
-router.get('/all',authenticate,async(req,res)=>{
-    try {
-        let userId = req.signData._id;
-        let orders = await Order.find({userId}).populate('products.productId');
-        res.status(200).send({orders,success:true})
-    } catch (error) {
-        res.status(401).send({error,message:"Unable to get user's orders",success:false})
-    }
-})
+// router.get('/all',authenticate,async(req,res)=>{
+//     try {
+//         let userId = req.signData._id;
+//         let orders = await Order.find({userId}).populate('products.productId');
+//         res.status(200).send({orders,success:true})
+//     } catch (error) {
+//         res.status(401).send({error,message:"Unable to get user's orders",success:false})
+//     }
+// })
 
 router.patch('/',authenticate,async(req,res)=>{
     try {
