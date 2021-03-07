@@ -24,7 +24,12 @@ module.exports.adminAuthenticate = async (req, res, next) => {
         if(user){
             if(!user.isAdmin){
                 console.log("Is not admin")
-                res.status(401).send({success:false,message:"Admin Authentication failed"})
+                try {
+                    res.status(401).send({success:false,message:"Admin Authentication failed"})
+                } catch (error) {
+                    console.log(error)
+                    next(error)
+                }
             } else {
                 console.log("Is admin")
                 next()
