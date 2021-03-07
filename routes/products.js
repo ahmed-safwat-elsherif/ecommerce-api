@@ -3,7 +3,7 @@ const router = express.Router()
 const { authenticate, adminAuthenticate } = require('../auth/user');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
-
+console.log('asdfsd')
 // get all products (from 0 to 15 with a skip)
 router.get('/',async(req,res)=>{
     try {
