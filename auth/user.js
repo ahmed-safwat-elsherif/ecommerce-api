@@ -15,8 +15,8 @@ module.exports.authenticate = (req, res, next) => {
 }
 module.exports.adminAuthenticate = (req, res, next) => {
     const {authorization} = req.headers;
-    const _id = req.signData._id;
-    const signData = jwt.verify(authorization, 'the-attack-titan');
+    let _id = req.signData._id;
+    // const signData = jwt.verify(authorization, 'the-attack-titan');
     console.log("_id:",_id)
     _id = mongoose.Types.ObjectId(_id)
     console.log("_id:",_id)
