@@ -13,26 +13,18 @@ module.exports.authenticate = (req, res, next) => {
         res.status(401).send({success: false, error:"Authorization failed"});
     }
 }
-module.exports.adminAuthenticate = (req, res, next) => {
-    const {authorization} = req.headers;
-    let _id = req.signData._id;
-    // const signData = jwt.verify(authorization, 'the-attack-titan');
-    console.log("_id:",_id)
-    _id = mongoose.Types.ObjectId(_id)
-    console.log("_id:",_id)
-    // User.findById({_id:"604089f23de5460015a7e3ea"},(err,user)=>{
-    //     console.log(user)
-    // })
-    User.findById({_id},(err,user)=>{
-        if(err){
-            return res.status(404).send({success:false,err,message:"Authentication failed"})
-        }
-        console.log("USER:",user)
+module.exports.adminAuthenticate = async (req, res, next) => {
+    try {
+        const {authorization} = req.headers;
+        let _id = req.signData._id;
+        console.log("_id:",_id)
+        _id = mongoose.Types.ObjectId(_id)
+        console.log("_id:",_id)
+        let user = await User.findById({_id});
         if(user){
             if(!user.isAdmin){
                 console.log("Is not admin")
                 res.status(401).send({success:false,message:"Admin Authentication failed"})
-                
             } else {
                 console.log("Is admin")
                 next();
@@ -40,6 +32,7 @@ module.exports.adminAuthenticate = (req, res, next) => {
         } else {
             return res.status(401).send({success:false,message:"Admin Authentication failed"})
         }
-        // req.signData = signData;
-    })
+    } catch (error) {
+        res.status(404).send({success:false,error,message:"Authentication failed"})
+    }
 }
