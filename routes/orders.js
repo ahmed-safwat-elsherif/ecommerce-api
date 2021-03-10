@@ -11,18 +11,16 @@ router.post('/',authenticate,async(req,res)=>{
     try {
         console.log("//")
         let userId = req.signData._id;
-        console.log(userId,req.body)
+        
         let {products, note, address} = req.body;
-        console.log(products,note, address);
+
         let toNumber = [];
-        console.log(toNumber);
+
         products.map(product=>{
             toNumber.push({productId:product.productId, quantity:Number(product.quantity)})
         })
-        console.log(toNumber);
         products = toNumber;
-        console.log(products);
-        let order = await Order.create({products,userId,note,address})
+        let order = await Order.create({products,userId,note,address,orderStatus:"pending",paymentMethod:"in cash"})
         res.status(200).send({order,message:"Order is successfully sent", success:true})
     } catch (error) {
         res.status(401).send({message:"Unable to create an order", success:false, error})
@@ -66,7 +64,7 @@ router.get('/fetch/all',authenticate,async(req,res)=>{
     try {
         let {_id} = req.signData;
         let user = await User.find({_id})
-        let orders = await Order.find({userId:_id});
+        let orders = await Order.find({userId:_id}).populate('productId');
         res.status(200).send({orders,user,message:"Orders fetched successfully", success:true})
     } catch (error) {
         res.status(401).send({error,message:"Orders fetching failed", success:false})
