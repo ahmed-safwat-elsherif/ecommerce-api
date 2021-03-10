@@ -64,7 +64,7 @@ router.get('/fetch/all',authenticate,async(req,res)=>{
     try {
         let {_id} = req.signData;
         let user = await User.find({_id})
-        let orders = await Order.find({userId:_id}).populate('productId');
+        let orders = await Order.find({userId:_id}).populate('products.productId');
         res.status(200).send({orders,user,message:"Orders fetched successfully", success:true})
     } catch (error) {
         res.status(401).send({error,message:"Orders fetching failed", success:false})
