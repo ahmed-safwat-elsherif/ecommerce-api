@@ -127,7 +127,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             console.log(product,product.reviews.length)
             let numberOfreviews = product?.reviews.length;
             console.log("numberOfreviews",numberOfreviews);
-            product.reviews[numberOfreviews] = rating;
+            product.reviews[numberOfreviews].rating = rating;
             console.log(0,product.reviews)
             let toNumbers = product.reviews.map(review=>toNumbers.append(Number(review.rating)));
             console.log(1,toNumbers)
