@@ -13,6 +13,13 @@ router.post('/',authenticate,async(req,res)=>{
         let userId = req.signData._id;
         console.log(userId,req.body)
         let {products, note, address} = req.body;
+        let toNumber;
+        products.map(products=>{
+            toNumber.push({productId:products.productId, quantity:Number(quantity)})
+        })
+        console.log(toNumber);
+        products = toNumber;
+        console.log(products);
         let order = await Order.create({products,userId,note,address})
         res.status(200).send({order,message:"Order is successfully sent", success:true})
     } catch (error) {
