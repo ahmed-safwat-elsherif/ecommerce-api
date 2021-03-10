@@ -124,12 +124,16 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             res.status(200).send({product,success:true, message:"Product has been deleted successfully"})
         } else {
             console.log("NOT FOUND !!")
-            
+            console.log(product)
             let numberOfreviews = product.reviews.length + 1;
             // console.log("numberOfreviews",numberOfreviews)
+            console.log(0,toNumbers)
             let toNumbers = product.reviews.map(review=>Number(review.rating));
+            console.log(1,toNumbers)
             let newRating = (toNumbers.reduce((tot,num)=>tot+num)+rating) / numberOfreviews;
+            console.log(2,toNumbers)
             newRating = Math.round(newRating)
+            console.log(3,toNumbers)
 
             // let newRating = (Number(rating)+ Number(product.rating))/numberOfreviews;
             // console.log("rating",rating)
