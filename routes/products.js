@@ -102,6 +102,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         let found = product.reviews.find(review => review.userId == userId);
         console.log("RATING PRODUCT with ID",_id)
         if(found){
+            console.log("FOUND !!")
             let ind = product.reviews.findIndex(review => review.userId == userId);
             // console.log("ind",ind)
             // console.log("product.reviews",product.reviews)
@@ -122,7 +123,8 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             });
             res.status(200).send({product,success:true, message:"Product has been deleted successfully"})
         } else {
-
+            console.log("NOT FOUND !!")
+            
             let numberOfreviews = product.reviews.length + 1;
             // console.log("numberOfreviews",numberOfreviews)
             let toNumbers = product.reviews.map(review=>Number(review.rating));
