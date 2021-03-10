@@ -9,19 +9,17 @@ const orderSchema = Schema({
     }],
     orderStatus:{
         type:String,
-        default:'Pending',
         enum:['accepted','canceled','pending']
     },
     note:{
-        type:String,
-        default:""
+        type:String
     },
     address:{
         type:String
     },
     paymentMethod:{
         type:String,
-        default:"in cash"
+        enum:["visa","paypal","mastercard","in cash"]
     }
 },
 { timestamps: { createdAt: 'createdAt' } })
