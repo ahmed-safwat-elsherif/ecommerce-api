@@ -125,14 +125,11 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         } else {
             console.log("NOT FOUND !!")
             console.log(product,product.reviews.length)
-            let numberOfreviews = product?.reviews.length + 1;
+            let numberOfreviews = product?.reviews.length;
             console.log("numberOfreviews",numberOfreviews);
             product.reviews[numberOfreviews] = rating;
             console.log(0,product.reviews)
-            let toNumbers;
-            product.reviews.map(review=>{
-                toNumbers.append(Number(review.rating))
-            });
+            let toNumbers = product.reviews.map(review=>toNumbers.append(Number(review.rating)));
             console.log(1,toNumbers)
             let newRating = (toNumbers.reduce((tot,num)=>tot+num)+rating) / numberOfreviews;
             console.log(2,newRating)
