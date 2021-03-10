@@ -106,10 +106,10 @@ router.patch('/',authenticate,async(req,res)=>{
     }
 })
 
-router.delete('/',authenticate,async(req,res)=>{
+router.delete('/:_id',authenticate,async(req,res)=>{
     try {
         let userId = req.signData._id;
-        let {_id} = req.body;
+        let {_id} = req.params;
         await Order.findOneAndDelete({_id});
         res.status(200).send({order,message:"Order has been deleted successfully", success:true})
     } catch (error) {

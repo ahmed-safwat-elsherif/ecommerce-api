@@ -11,17 +11,17 @@ const Product = require('../models/productModel')
 router.post('/register', async (req, res, next) => {
     try {
         console.log(req.body)
-        const { email = "", password = "", firstname = "", lastname = "", gender = 'male', profileImage='4' } = req.body;
-        let exists = await User.count({email});
+        const { email = "", password = "", firstname = "", lastname = "", gender = 'male', profileImage = '4' } = req.body;
+        let exists = await User.count({ email });
         console.log(exists)
-        if(exists>0) {
-            return res.status(200).send({exists:true,success:false,message:"Email is exists"})
+        if (exists > 0) {
+            return res.status(200).send({ exists: true, success: false, message: "Email is exists" })
         }
         console.log(password.length)
         if (password.length < 6) throw new Error({ error: 'password accepts only minimum 6 characters' })
         const hash = await bcrypt.hash(password, 7);
         console.log("HERERERERERE")
-        const user = await User.create({ email, password: hash, firstname, lastname, gender,profileImage })
+        const user = await User.create({ email, password: hash, firstname, lastname, gender, profileImage })
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         const confirmationLink = `https://amnesia-skincare.herokuapp.com/api/users/confirmation/${token}`;
         const message = `
@@ -100,8 +100,8 @@ router.post('/login', validate, async (req, res, next) => {
         const user = await User.findOne({ email }).exec();
         console.log('user:', user)
         if (!user) throw new Error("wrong email or password");
-        if (!user.confirmation){
-            return res.status(400).send({success:false,confirmed:false,message:"Confirmation is required"})
+        if (!user.confirmation) {
+            return res.status(400).send({ success: false, confirmed: false, message: "Confirmation is required" })
         }
         const isMatched = await bcrypt.compare(password, user.password);
         console.log(isMatched)
@@ -110,10 +110,10 @@ router.post('/login', validate, async (req, res, next) => {
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
         res.statusCode = 200;
         delete user.password;
-        res.send({ message: "logged in successfully",confirmed:true, success: true,user, token })
+        res.send({ message: "logged in successfully", confirmed: true, success: true, user, token })
     } catch (error) {
         res.statusCode = 401;
-        res.send({ error, message: "Invalid credentials",confirmed:false, success: false })
+        res.send({ error, message: "Invalid credentials", confirmed: false, success: false })
     }
 })
 
@@ -155,15 +155,15 @@ router.patch('/changePassword', authenticate, async (req, res) => {
     }
 })
 
-router.post('/forgetPassword',async(req,res)=>{
+router.post('/forgetPassword', async (req, res) => {
     try {
-        let {email} = req.body;
-        let user = await User.findOne({email});
-        console.log("USER :" ,user)
-        if(!user){
-            return res.status(404).send({message:"Email is not registered", success:false})
+        let { email } = req.body;
+        let user = await User.findOne({ email });
+        console.log("USER :", user)
+        if (!user) {
+            return res.status(404).send({ message: "Email is not registered", success: false })
         }
-        const token = jwt.sign({ _id:user._id}, 'the-attack-titan'); // expiration json web token in 2 hours
+        const token = jwt.sign({ _id: user._id }, 'the-attack-titan'); // expiration json web token in 2 hours
         const forgetPassword = `http://localhost:4200/resetpassword/${token}`;
         const message = `
         <div style="padding:30px 0 ;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;text-align: center; background-color:#eae3c8; color:#383e56; border-radius: 5px;">
@@ -207,29 +207,29 @@ router.post('/forgetPassword',async(req,res)=>{
         delete user.password;
         res.status(201).send({ user, success: true, message: "sent successfully" })
     } catch (error) {
-        res.status(404).send({message:"Unable to reset password", success:false,error})
+        res.status(404).send({ message: "Unable to reset password", success: false, error })
     }
 })
 
-router.post('/reset/password',authenticate,async(req,res)=>{
+router.post('/reset/password', authenticate, async (req, res) => {
     try {
-        let {_id} = req.signData;
-        let {password} = req.body;
-        console.log("USER ID : ",_id)
-        let user = await User.findByIdAndUpdate({_id},{password},{
-            new:true
+        let { _id } = req.signData;
+        let { password } = req.body;
+        console.log("USER ID : ", _id)
+        let user = await User.findByIdAndUpdate({ _id }, { password }, {
+            new: true
         }).exec();
         console.log(user)
         delete user.password;
-        res.status(200).send({message:"Password has been changed successfully",success:true,user})
+        res.status(200).send({ message: "Password has been changed successfully", success: true, user })
     } catch (error) {
-        res.status(400).send({message:"Password failed to be changed",success:false,error})
+        res.status(400).send({ message: "Password failed to be changed", success: false, error })
     }
 })
 
-router.post('/contactus',async(req,res)=>{
+router.post('/contactus', async (req, res) => {
     try {
-        let {email,subject,fullname,message,phone} = req.body;
+        let { email, subject, fullname, message, phone } = req.body;
         let toEmail = "sheryshawky2018@gmail.com";
         const fullmessage = `
         <div style="padding:30px 0 ;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;text-align: center; background-color:#eae3c8; color:#383e56; border-radius: 5px;">
@@ -268,21 +268,21 @@ router.post('/contactus',async(req,res)=>{
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
-        res.status(201).send({success: true, message: "sent successfully" })
+        res.status(201).send({ success: true, message: "sent successfully" })
     } catch (error) {
         res.status(422).send({ error, success: false });
     }
 })
 // Get all users in back-end 
-router.get('/get/users',authenticate,adminAuthenticate,async(req,res)=>{
+router.get('/get/users', authenticate, adminAuthenticate, async (req, res) => {
     try {
         let { limit = 10, skip = 0 } = req.query;
         if (Number(limit) > 10) {
             limit = 10;
         }
-        let numOfUsers =  await User.countDocuments().exec();
-        let users =  await User.find().skip(Number(skip)).limit(Number(limit)).exec();
-        if(!users) throw new Error(`Unabled to find users to display`)
+        let numOfUsers = await User.countDocuments().exec();
+        let users = await User.find().skip(Number(skip)).limit(Number(limit)).exec();
+        if (!users) throw new Error(`Unabled to find users to display`)
         res.status(200).send({ length: numOfUsers, users })
     } catch (error) {
         res.status(401).send(error)
@@ -309,7 +309,7 @@ router.route('/')
             let { email, gender, userPassword, firstname, lastname, addresses, phones } = req.body;
             let user = await User.findOne({ _id });
 
-            console.log("HERE is USER",user)
+            console.log("HERE is USER", user)
             // console.log(userPassword, user.password)
             const isMatched = await bcrypt.compare(userPassword, user.password);
             // console.log(isMatched)
