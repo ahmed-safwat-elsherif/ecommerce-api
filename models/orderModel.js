@@ -5,7 +5,7 @@ const orderSchema = Schema({
     // adminId:{type: Schema.Types.ObjectId, ref:'User'},
     products:[{
         productId:{type: Schema.Types.ObjectId, ref:'Product'},
-        quantity:{type:Number, default:0},
+        quantity:{type:Number, default:1},
     }],
     orderStatus:{
         type:String,

@@ -100,6 +100,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         let {rating} = req.body;
         let product = await Product.findOne({_id});
         let found = product.reviews.find(review => review.userId == userId);
+        console.log("RATING PRODUCT with ID",_id)
         if(found){
             let ind = product.reviews.findIndex(review => review.userId == userId);
             // console.log("ind",ind)
