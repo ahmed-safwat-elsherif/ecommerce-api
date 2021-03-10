@@ -111,7 +111,8 @@ router.delete('/:_id',authenticate,async(req,res)=>{
         let userId = req.signData._id;
         let {_id} = req.params;
         await Order.findOneAndDelete({_id});
-        res.status(200).send({order,message:"Order has been deleted successfully", success:true})
+        let orders = await Order.find({userId})
+        res.status(200).send({orders,message:"Order has been deleted successfully", success:true})
     } catch (error) {
         res.status(401).send({error,message:"Unable to delete order", success:false})
     }
