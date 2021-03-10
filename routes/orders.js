@@ -13,6 +13,7 @@ router.post('/',authenticate,async(req,res)=>{
         let userId = req.signData._id;
         console.log(userId,req.body)
         let {products, note, address} = req.body;
+        console.log(products,note, address);
         let toNumber = [];
         products.map(products=>{
             toNumber.push({productId:products.productId, quantity:Number(quantity)})
