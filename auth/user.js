@@ -3,7 +3,14 @@ const User = require('../models/userModel');
 const mongoose = require('mongoose')
 module.exports.authenticate = (req, res, next) => {
     try {
-        const { authorization } = req.headers;
+        let { authorization } = req.headers;
+        authorization = authorization.split(' ');
+        if(authorization.length == 2){
+            console.log("bearer")
+            authorization = authorization[1];
+        } else {
+            authorization = authorization[0];
+        }
         console.log(authorization)
         const signData = jwt.verify(authorization, 'the-attack-titan');
         console.log("signData:", signData)
@@ -15,7 +22,7 @@ module.exports.authenticate = (req, res, next) => {
 }
 module.exports.adminAuthenticate = async (req, res, next) => {
     try {
-        const { authorization } = req.headers;
+        // const { authorization } = req.headers;
         let _id = req.signData._id;
         console.log("_id:", _id)
         _id = mongoose.Types.ObjectId(_id)
