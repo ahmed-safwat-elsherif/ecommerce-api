@@ -40,6 +40,7 @@ router.get('/all/:status',authenticate,adminAuthenticate,async(req,res)=>{
             limit = 10;
         }
         let numOfOrders =  await Order.countDocuments().exec();
+        console.log({numOfOrders})
         let orders =  await Order.find({status}).skip(Number(skip)).limit(Number(limit)).exec().populate('userId');
         console.log({status,numOfOrders,orders})
         if(!orders) throw new Error(`Unabled to find orders to display`)
