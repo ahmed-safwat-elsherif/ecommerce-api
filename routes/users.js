@@ -273,7 +273,7 @@ router.post('/contactus', async (req, res) => {
         res.status(422).send({ error, success: false });
     }
 })
-// Get all users in back-end 
+// Get all users in MongoDB
 router.get('/get/users', authenticate, adminAuthenticate, async (req, res) => {
     try {
         let { limit = 10, skip = 0 } = req.query;
