@@ -4,19 +4,15 @@ const mongoose = require('mongoose')
 module.exports.authenticate = (req, res, next) => {
     try {
         let { authorization } = req.headers;
-        console.log({authorization})
         authorization = authorization.split(' ');
-        console.log({authorization})
         if(authorization.length == 2){
-            console.log({authorization})
             console.log("bearer")
-            let authToken = authorization[1];
+            authorization = authorization[1];
         } else {
-            console.log({authorization})
-            let authToken = authorization[0];
+            authorization = authorization[0];
         }
         console.log(authorization)
-        const signData = jwt.verify(authToken, 'the-attack-titan');
+        const signData = jwt.verify(authorization, 'the-attack-titan');
         console.log("signData:", signData)
         req.signData = signData;
         next();
