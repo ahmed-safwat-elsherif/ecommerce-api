@@ -38,6 +38,6 @@ module.exports.adminAuthenticate = async (req, res, next) => {
         console.log("Is admin")
         next()
     } catch (error) {
-        res.status(404).send({ success: false, error, message: "Authentication failed" })
+        res.status(404).send({ success: false, error, message: "Admin Authentication failed" })
     }
 }
