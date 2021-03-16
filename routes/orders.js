@@ -31,6 +31,7 @@ router.post('/',authenticate,async(req,res)=>{
 router.get('/all/:status',authenticate,adminAuthenticate,async(req,res)=>{
     try {
         let {status} = req.params;
+        console.log(status)
         if(!['accepted','canceled','pending'].includes(status)){
             return res.status(404).send({success:false,message:"Check the status param"})
         }
@@ -39,7 +40,8 @@ router.get('/all/:status',authenticate,adminAuthenticate,async(req,res)=>{
             limit = 10;
         }
         let numOfOrders =  await Order.countDocuments().exec();
-        let orders =  await Order.find({status}).skip(Number(skip)).limit(Number(limit)).exec();
+        let orders =  await Order.find({status}).skip(Number(skip)).limit(Number(limit)).exec().populate('userId');
+        console.log({status,numOfOrders,orders})
         if(!orders) throw new Error(`Unabled to find orders to display`)
         res.status(200).send({ length: numOfOrders, orders })
         // let orders = await Order.find({status})
