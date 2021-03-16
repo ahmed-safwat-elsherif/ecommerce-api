@@ -6,13 +6,15 @@ module.exports.authenticate = (req, res, next) => {
         let { authorization } = req.headers;
         authorization = authorization.split(' ');
         if(authorization.length == 2){
+            console.log({authorization})
             console.log("bearer")
-            authorization = authorization[1];
+            let authToken = authorization[1];
         } else {
-            authorization = authorization[0];
+            console.log({authorization})
+            let authToken = authorization[0];
         }
         console.log(authorization)
-        const signData = jwt.verify(authorization, 'the-attack-titan');
+        const signData = jwt.verify(authToken, 'the-attack-titan');
         console.log("signData:", signData)
         req.signData = signData;
         next();
