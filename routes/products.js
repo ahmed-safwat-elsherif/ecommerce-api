@@ -30,7 +30,7 @@ router.get('/:pname/search',async(req,res)=>{
             limit = 10;
         }
         let numOfProducts =  await Product.countDocuments().exec();
-        let products =  await Product.find({name:pname}).skip(Number(skip)).limit(Number(limit)).exec();
+        let products =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(skip)).limit(Number(limit)).exec();
         if(!products) throw new Error(`Unabled to find any country to display`)
         res.status(200).send({ length: numOfProducts, products })
     } catch (error) {
@@ -42,7 +42,7 @@ router.get('/search/:pname',async(req,res)=>{
     try {
         let {pname} = req.params;
         let numOfProducts =  await Product.countDocuments().exec();
-        let products =  await Product.find({name:pname}).skip(Number(0)).limit(Number(numOfProducts)).exec();
+        let products =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(0)).limit(Number(numOfProducts)).exec();
         res.status(200).send({ length: numOfProducts, products })
     } catch (error) {
         res.status(401).send(error)
