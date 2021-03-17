@@ -24,7 +24,7 @@ router.get('/',async(req,res)=>{
 router.get('/:pname/search',async(req,res)=>{
     try {
         let {pname} = req.params;
-        console.log()
+        console.log(pname)
         let { limit = 10, skip = 0 } = req.query;
         if (Number(limit) > 10) {
             limit = 10;
