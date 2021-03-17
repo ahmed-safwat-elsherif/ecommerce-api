@@ -50,7 +50,7 @@ router.post('/product',authenticate,adminAuthenticate, async(req,res)=>{
         console.log(current_price,old_price)
         current_price = Number(current_price);
         old_price = Number(old_price);
-        let newProduct = await Product.create({name,description,createdBy,current_price,old_price});
+        let newProduct = await Product.create({name,description,createdBy,current_price,old_price,status});
         res.status(200).send({newProduct,message:"Product was added successfully", success:true})
     } catch (error) {
         res.status(400).send({error,message:"Adding product failed", success:false})
