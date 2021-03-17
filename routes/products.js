@@ -3,6 +3,8 @@ const router = express.Router()
 const { authenticate, adminAuthenticate } = require('../auth/user');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
+const Image  = require('../models/imageModel')
+const ImageChunk  = require('../models/imageChunkModel')
 console.log('asdfsd')
 // get all products (from 0 to 15 with a skip)
 router.get('/',async(req,res)=>{
@@ -84,6 +86,9 @@ router.patch('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
 router.delete('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
     try {
         let {_id} = req.params;
+        let product = await Product.findOne({_id});
+        let image = await Image.findOneAndDelete({filename:product.image});
+        await ImageChunk.deleteMany({files_id:image._id})
         await Product.deleteOne({_id});
         await User.updateMany({}, { $pullAll: { favoriteProducts: [_id] } });
         res.status(200).send({success:true, message:"Product has been deleted successfully"})

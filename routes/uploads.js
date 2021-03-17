@@ -49,14 +49,14 @@ router.post('/user',authenticate,upload.single('image'), async(req,res)=>{
         let image = await Image.findOne({filename:req.file.filename});
         let date = new Date(image.uploadDate)
         console.log(image)
+        // let userOld = await User.findOne({_id});
+        // if(userOld.profileImage.length >= 0){
+        //     let imageOld = await Image.find({filename:userOld.profileImage})
+        // }
         let user = await User.findOneAndUpdate({_id},{profileImage:image.filename},{
             new:true
         }).exec()
         console.log('TIME NOW: ',date.getHours()-12,':',date.getMinutes())
-        // await User.findOneAndUpdate({_id},{profileImage:filename},{
-        //     new: true
-        // }).exec();
-        // res.redirect('/');
         res.status(200).send({user,image,message:"Uploaded successfully", success:true})
     } catch (error) {
         res.status(404).send({error,message:"Unable to upload", success:false})
