@@ -15,10 +15,14 @@ router.get('/:pname',async(req,res)=>{
         }
         let numOfProducts =  await Product.countDocuments().exec();
         var products;
+        console.log(!pname , pname.length==0)
         if(!pname || pname.length==0){
+        
             products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
+            console.log(products)
         } else {
             products =  await Product.find({name:pname}).skip(Number(skip)).limit(Number(limit)).exec();
+            console.log(products)
         }
         if(!products) throw new Error(`Unabled to find any country to display`)
         res.status(200).send({ length: numOfProducts, products })
