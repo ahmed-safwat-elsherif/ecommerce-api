@@ -90,7 +90,7 @@ router.delete('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
         if(product.image.length == 0){
             let image = await Image.findOneAndDelete({filename:product.image});
             console.log(image)
-            await ImageChunk.deleteMany({files_id:image._id})
+            await ImageChunk.deleteMany({files_id:image?._id})
         }
         await Product.deleteOne({_id});
         await User.updateMany({}, { $pullAll: { favoriteProducts: [_id] } });
