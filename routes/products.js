@@ -73,8 +73,8 @@ router.patch('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
     try {
         let {_id} = req.params;
         let {image, createdBy, rating,reviews} = await Product.findOne({_id});
-        let {name, current_price,old_price,description} = req.body;
-        let newUpdate = await Product.findOneAndUpdate({ _id }, {image, createdBy, rating,reviews,name, current_price,old_price,description}, {
+        let {name, current_price,old_price,description,status} = req.body;
+        let newUpdate = await Product.findOneAndUpdate({ _id }, {image, createdBy, rating,reviews,name, current_price,old_price,description,status}, {
             new: true
         }).exec();
         res.status(200).send({newUpdate,status:true, message:"Product has been updated successfully"})
