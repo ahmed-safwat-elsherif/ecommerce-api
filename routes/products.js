@@ -32,7 +32,16 @@ router.get('/:pname/search',async(req,res)=>{
     }
 })
 
-
+router.get('/search/:pname',async(req,res)=>{
+    try {
+        let {pname} = req.params;
+        let numOfProducts =  await Product.countDocuments().exec();
+        let allProduct = await Product.find({name:pname}).skip(Number(0)).limit(Number(numOfProducts)).exec();
+        res.status(200).send({ length: numOfProducts, products:allProduct })
+    } catch (error) {
+        res.status(401).send(error)
+    }
+}))
 
 router.get('/get/all',async(req,res)=>{
     try {
