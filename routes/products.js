@@ -6,7 +6,7 @@ const Product = require('../models/productModel');
 const Image  = require('../models/imageModel')
 const ImageChunk  = require('../models/imageChunkModel')
 // get all products (from 0 to 15 with a skip)
-router.get('/:pname',async(req,res)=>{
+router.get('/:pname/',async(req,res)=>{
     try {
         let {pname} = req.params;
         console.log(pname)
