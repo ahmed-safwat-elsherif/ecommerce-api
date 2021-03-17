@@ -6,42 +6,20 @@ const Product = require('../models/productModel');
 const Image  = require('../models/imageModel')
 const ImageChunk  = require('../models/imageChunkModel')
 // get all products (from 0 to 15 with a skip)
-router.get('/:pname/search',async(req,res)=>{
+router.get('/',async(req,res)=>{
     try {
-        let {pname} = req.params;
-        console.log(pname)
         let { limit = 10, skip = 0 } = req.query;
         if (Number(limit) > 10) {
             limit = 10;
         }
         let numOfProducts =  await Product.countDocuments().exec();
-        var products;
-        console.log(!pname , pname.length==0)
-        if(!pname || pname.length==0){
-        
-            products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
-            console.log(products)
-        } else {
-            products =  await Product.find({name:pname}).skip(Number(skip)).limit(Number(limit)).exec();
-            console.log(products)
-        }
+        let products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
         if(!products) throw new Error(`Unabled to find any country to display`)
         res.status(200).send({ length: numOfProducts, products })
     } catch (error) {
         res.status(401).send(error)
     }
 })
-
-router.get('/search/:pname',async(req,res)=>{
-    try {
-        let {pname} = req.params;
-        let numOfProducts =  await Product.countDocuments().exec();
-        let allProduct = await Product.find({name:pname}).skip(Number(0)).limit(Number(numOfProducts)).exec();
-        res.status(200).send({ length: numOfProducts, products:allProduct })
-    } catch (error) {
-        res.status(401).send(error)
-    }
-}))
 
 router.get('/get/all',async(req,res)=>{
     try {
