@@ -9,6 +9,7 @@ const ImageChunk  = require('../models/imageChunkModel')
 router.get('/:pname',async(req,res)=>{
     try {
         let {pname} = req.params;
+        console.log(pname)
         let { limit = 10, skip = 0 } = req.query;
         if (Number(limit) > 10) {
             limit = 10;
