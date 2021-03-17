@@ -86,6 +86,7 @@ router.delete('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
     try {
         let {_id} = req.params;
         let product = await Product.findOne({_id});
+        console.log(product)
         if(product.image.length == 0){
             let image = await Image.findOneAndDelete({filename:product.image});
             console.log(image)
