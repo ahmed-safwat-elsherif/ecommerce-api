@@ -21,13 +21,13 @@ router.get('/',async(req,res)=>{
     }
 })
 
-router.get('/:pname/search',async(req,res)=>{
+router.get('/:pname',async(req,res)=>{
     try {
         let {pname} = req.params;
         console.log(pname)
-        let { limit = 10, skip = 0 } = req.query;
-        if (Number(limit) > 10) {
-            limit = 10;
+        let { limit = 5, skip = 0 } = req.query;
+        if (Number(limit) > 5) {
+            limit = 5;
         }
         let numOfProducts =  await Product.countDocuments().exec();
         let products =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(skip)).limit(Number(limit)).exec();
