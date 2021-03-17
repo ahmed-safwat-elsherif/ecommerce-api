@@ -85,7 +85,7 @@ router.post('/product',authenticate,adminAuthenticate, async(req,res)=>{
     }
 })
 // GET specific product info
-router.get('/:_id',async(req,res)=>{
+router.get('product/:_id',async(req,res)=>{
     try {
         let {_id} = req.params;
         let product = await Product.findOne({_id});
@@ -94,6 +94,7 @@ router.get('/:_id',async(req,res)=>{
         res.status(404).send({message:"Product is not found", success:false})
     }
 })
+
 
 // UPDATE product
 router.patch('/:_id',authenticate,adminAuthenticate,async(req,res)=>{
