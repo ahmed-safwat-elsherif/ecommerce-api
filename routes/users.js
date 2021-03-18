@@ -159,7 +159,7 @@ router.get('/profile', authenticate, async (req, res) => {
         res.status(401).send({ error, message: 'user not found', success: false })
     }
 })
-router.get('/:pname', authenticate,adminAuthenticate, async (req, res) => {
+router.get('/get/users/:pname', authenticate,adminAuthenticate, async (req, res) => {
     try {
         let { pname } = req.params;
         console.log(pname)
