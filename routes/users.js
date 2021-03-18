@@ -117,6 +117,35 @@ router.post('/login', validate, async (req, res, next) => {
     }
 })
 
+router.post('/admin/login', validate, async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        console.log({ email, password })
+        let all = await User.find();
+        console.log('all', all)
+        const user = await User.findOne({ email }).exec();
+        if(!user.isAdmin){
+            res.status(401).send({message:"Admin Authorization failed",success:false})
+        }
+        console.log('user:', user)
+        if (!user) throw new Error("wrong email or password");
+        if (!user.confirmation) {
+            return res.status(400).send({ success: false, confirmed: 'no', message: "Confirmation is required" })
+        }
+        const isMatched = await bcrypt.compare(password, user.password);
+        console.log(isMatched)
+
+        if (!isMatched) throw new Error("wrong email or password");
+        const token = jwt.sign({ _id: user._id }, 'the-attack-titan');
+        res.statusCode = 200;
+        delete user.password;
+        res.send({ message: "logged in successfully", confirmed: 'yes', success: true, user, token })
+    } catch (error) {
+        res.statusCode = 401;
+        res.send({ error, message: "Invalid credentials",confirmed:'invalid',success: false })
+    }
+})
+
 router.get('/profile', authenticate, async (req, res) => {
     try {
         const { _id } = req.signData;
