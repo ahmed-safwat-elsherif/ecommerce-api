@@ -36,7 +36,7 @@ router.get('/all/:status',authenticate,adminAuthenticate,async(req,res)=>{
         if (Number(limit) > 10) {
             limit = 10;
         }
-        let numOfOrders =  await Order.countDocuments().exec();
+        let numOfOrders =  await Order.countDocuments({orderStatus:status}).exec();
         console.log({numOfOrders})
         let orders =  await Order.find({orderStatus:status}).skip(Number(skip)).limit(Number(limit)).populate('products.productId').populate('userId').exec();
         console.log({status,numOfOrders,orders})
