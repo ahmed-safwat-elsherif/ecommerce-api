@@ -168,6 +168,7 @@ router.post('/admin/login', validate, async (req, res, next) => {
 
 router.get('/profile', authenticate, async (req, res) => {
     try {
+        console.log("GET PROFILE DATA")
         const { _id } = req.signData;
         console.log(_id)
         const user = await User.findOne({ _id }).populate('favoriteProducts');
