@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 module.exports.authenticate = (req, res, next) => {
     try {
         let { authorization } = req.headers;
-        console.log(authorization)
+
         authorization = authorization.split(' ');
         if(authorization.length == 2){
             console.log("bearer")

@@ -215,8 +215,9 @@ router.post('/reset/password', authenticate, async (req, res) => {
     try {
         let { _id } = req.signData;
         let { password } = req.body;
+        const hash = await bcrypt.hash(password, 7);
         console.log("USER ID : ", _id)
-        let user = await User.findByIdAndUpdate({ _id }, { password }, {
+        let user = await User.findByIdAndUpdate({ _id }, { password:hash }, {
             new: true
         }).exec();
         console.log(user)
