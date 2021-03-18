@@ -67,7 +67,7 @@ router.post('/user', authenticate, upload.single('image'), async (req, res) => {
 router.post('/product/:productId', authenticate, adminAuthenticate, upload.single('image'), async (req, res) => {
     try {
         console.log("Uploading ...... ")
-        console.log(req.file)
+        console.log(req)
         let { filename } = req.file;
         console.log(filename)
         let { productId } = req.params;
