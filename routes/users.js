@@ -73,25 +73,6 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
-router.get('/:pname', authenticate,adminAuthenticate, async (req, res) => {
-    try {
-        let { pname } = req.params;
-        console.log(pname)
-        let { limit = 5, skip = 0 } = req.query;
-        if (Number(limit) > 5) {
-            limit = 5;
-        }
-        let numOfUsers = await User.countDocuments().exec();
-        let users = await User.find({
-            firstname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") },
-            lastname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") }
-        }).skip(Number(skip)).limit(Number(limit)).exec();
-        if (!users) throw new Error(`Unabled to find any country to display`)
-        res.status(200).send({ length: numOfUsers, users })
-    } catch (error) {
-        res.status(401).send(error)
-    }
-})
 
 router.get('/confirmation/:token', async (req, res) => {
     try {
@@ -178,7 +159,25 @@ router.get('/profile', authenticate, async (req, res) => {
         res.status(401).send({ error, message: 'user not found', success: false })
     }
 })
-
+router.get('/:pname', authenticate,adminAuthenticate, async (req, res) => {
+    try {
+        let { pname } = req.params;
+        console.log(pname)
+        let { limit = 5, skip = 0 } = req.query;
+        if (Number(limit) > 5) {
+            limit = 5;
+        }
+        let numOfUsers = await User.countDocuments().exec();
+        let users = await User.find({
+            firstname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") },
+            lastname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") }
+        }).skip(Number(skip)).limit(Number(limit)).exec();
+        if (!users) throw new Error(`Unabled to find any country to display`)
+        res.status(200).send({ length: numOfUsers, users })
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
 router.patch('/changePassword', authenticate, async (req, res) => {
     try {
         let { _id } = req.signData;
