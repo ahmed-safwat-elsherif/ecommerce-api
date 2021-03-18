@@ -73,17 +73,20 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
-router.get('/:pname',async(req,res)=>{
+router.get('/:pname', async (req, res) => {
     try {
-        let {pname} = req.params;
+        let { pname } = req.params;
         console.log(pname)
         let { limit = 5, skip = 0 } = req.query;
         if (Number(limit) > 5) {
             limit = 5;
         }
-        let numOfUsers =  await Product.countDocuments().exec();
-        let users =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(skip)).limit(Number(limit)).exec();
-        if(!users) throw new Error(`Unabled to find any country to display`)
+        let numOfUsers = await User.countDocuments().exec();
+        let users = await User.find({
+            firstname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") },
+            lastname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") }
+        }).skip(Number(skip)).limit(Number(limit)).exec();
+        if (!users) throw new Error(`Unabled to find any country to display`)
         res.status(200).send({ length: numOfUsers, users })
     } catch (error) {
         res.status(401).send(error)
@@ -130,7 +133,7 @@ router.post('/login', validate, async (req, res, next) => {
         res.send({ message: "logged in successfully", confirmed: 'yes', success: true, user, token })
     } catch (error) {
         res.statusCode = 401;
-        res.send({ error, message: "Invalid credentials",confirmed:'invalid',success: false })
+        res.send({ error, message: "Invalid credentials", confirmed: 'invalid', success: false })
     }
 })
 
@@ -141,8 +144,8 @@ router.post('/admin/login', validate, async (req, res, next) => {
         let all = await User.find();
         console.log('all', all)
         const user = await User.findOne({ email }).exec();
-        if(!user.isAdmin){
-            res.status(401).send({message:"Admin Authorization failed",success:false})
+        if (!user.isAdmin) {
+            res.status(401).send({ message: "Admin Authorization failed", success: false })
         }
         console.log('user:', user)
         if (!user) throw new Error("wrong email or password");
@@ -159,7 +162,7 @@ router.post('/admin/login', validate, async (req, res, next) => {
         res.send({ message: "logged in successfully", confirmed: 'yes', success: true, user, token })
     } catch (error) {
         res.statusCode = 401;
-        res.send({ error, message: "Invalid credentials",confirmed:'invalid',success: false })
+        res.send({ error, message: "Invalid credentials", confirmed: 'invalid', success: false })
     }
 })
 
@@ -263,7 +266,7 @@ router.post('/reset/password', authenticate, async (req, res) => {
         let { password } = req.body;
         const hash = await bcrypt.hash(password, 7);
         console.log("USER ID : ", _id)
-        let user = await User.findByIdAndUpdate({ _id }, { password:hash }, {
+        let user = await User.findByIdAndUpdate({ _id }, { password: hash }, {
             new: true
         }).exec();
         console.log(user)
