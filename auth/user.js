@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const mongoose = require('mongoose')
 module.exports.authenticate = (req, res, next) => {
     try {
-        console.log(req.headers)
+        console.log(req)
         let { authorization } = req.headers;
         console.log(authorization)
         authorization = authorization.split(' ');
