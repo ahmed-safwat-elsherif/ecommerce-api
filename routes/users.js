@@ -73,7 +73,7 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
-router.get('/:pname', async (req, res) => {
+router.get('/:pname', authenticate,adminAuthenticate, async (req, res) => {
     try {
         let { pname } = req.params;
         console.log(pname)
