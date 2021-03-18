@@ -51,8 +51,9 @@ router.get('/search/:pname',async(req,res)=>{
 
 router.get('/get/all',async(req,res)=>{
     try {
-        let products = await products.find();
-        res.status(200).send({products, success:true,message:"ALL PRODUCTS RETRIEVED SUCCESSFULLY"});
+        let numOfProducts =  await Product.countDocuments().exec();
+        let products = await Product.find().skip(Number(0)).limit(Number(numOfProducts)).exec();
+        res.status(200).send({products,length:numOfProducts, success:true,message:"ALL PRODUCTS RETRIEVED SUCCESSFULLY"});
     } catch (error) {
         res.status(400).send({error,message:"failed to retrieve"})
     }
