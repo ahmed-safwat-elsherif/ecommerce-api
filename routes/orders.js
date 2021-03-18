@@ -53,7 +53,8 @@ router.get('/for/:userId',authenticate,adminAuthenticate,async(req,res)=>{
     try {
         let {userId} = req.params;
         let user = await User.find({_id:userId})
-        let orders = await Order.find({userId});
+        let noOfOrders = await Order.countDocuments({userId})
+        let orders = await Order.find({userId}).skip(0).limit(noOfOrders);
         res.status(200).send({orders, userId,user,message:"Orders fetched successfully", success:true})
     } catch (error) {
         res.status(401).send({error,message:"Orders fetching failed", success:false})
