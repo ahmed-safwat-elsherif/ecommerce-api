@@ -11,7 +11,7 @@ module.exports.authenticate = (req, res, next) => {
         } else {
             authorization = authorization[0];
         }
-        console.log(authorization)
+        console.log("auth token: ",authorization)
         const signData = jwt.verify(authorization, 'the-attack-titan');
         console.log("signData:", signData)
         req.signData = signData;
