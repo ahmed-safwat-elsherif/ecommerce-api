@@ -169,8 +169,10 @@ router.get('/get/users/:pname', authenticate,adminAuthenticate, async (req, res)
         }
         let numOfUsers = await User.countDocuments().exec();
         let users = await User.find({
-            firstname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") },
-            lastname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") }
+            $or:[
+                {firstname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") }},
+                {lastname: { $regex: new RegExp("^" + pname.toLowerCase(), "i") }}
+            ]
         }).skip(Number(skip)).limit(Number(limit)).exec();
         if (!users) throw new Error(`Unabled to find any country to display`)
         res.status(200).send({ length: numOfUsers, users })
