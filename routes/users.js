@@ -73,6 +73,23 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
+router.get('/:pname',async(req,res)=>{
+    try {
+        let {pname} = req.params;
+        console.log(pname)
+        let { limit = 5, skip = 0 } = req.query;
+        if (Number(limit) > 5) {
+            limit = 5;
+        }
+        let numOfUsers =  await Product.countDocuments().exec();
+        let users =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(skip)).limit(Number(limit)).exec();
+        if(!users) throw new Error(`Unabled to find any country to display`)
+        res.status(200).send({ length: numOfUsers, users })
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
+
 router.get('/confirmation/:token', async (req, res) => {
     try {
         const { token } = req.params;
