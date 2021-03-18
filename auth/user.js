@@ -18,7 +18,7 @@ module.exports.authenticate = (req, res, next) => {
         req.signData = signData;
         next();
     } catch (error) {
-        res.status(401).send({ success: false, error: "Authorization failed" });
+        res.status(401).send({ success: false, error: "User Authorization failed" });
     }
 }
 module.exports.adminAuthenticate = async (req, res, next) => {
