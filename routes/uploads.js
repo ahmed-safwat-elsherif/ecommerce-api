@@ -68,13 +68,16 @@ router.post('/product/:productId', authenticate, adminAuthenticate, upload.singl
     try {
         console.log("Uploading ...... ")
         let { filename } = req.file;
+        console.log(filename)
         let { productId } = req.params;
+        console.log(productId)
         let image = await Image.findOne({ filename: req.file.filename });
         let date = new Date(image.uploadDate)
         console.log(image)
         let product = await Product.findOneAndUpdate({ _id:productId }, { image: image.filename }, {
             new: true
         }).exec()
+        console.log(product)
         console.log('TIME NOW: ', date.getHours() - 12, ':', date.getMinutes())
         res.status(200).send({ product, image, message: "Uploaded successfully", success: true })
     } catch (error) {
