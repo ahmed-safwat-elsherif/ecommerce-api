@@ -25,6 +25,7 @@ router.get('/',async(req,res)=>{
 router.get('/:pname',async(req,res)=>{
     try {
         console.log("/",req.url)
+        console.log("pname: ",pname)
         let {pname} = req.params;
         console.log(pname)
         let { limit = 5, skip = 0 } = req.query;
