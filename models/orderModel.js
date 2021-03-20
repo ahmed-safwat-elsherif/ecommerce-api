@@ -22,8 +22,14 @@ const orderSchema = Schema({
         enum:["visa","paypal","mastercard","in cash"]
     },
     deliverAt:{
-        type:Date,
-        default:Date.now()
+        from:{
+            type:Date,
+            default:Date.now()
+        },
+        to:{
+            type:Date,
+            default:Date.now()
+        }
     }
 },
 { timestamps: { createdAt: 'createdAt' } })
