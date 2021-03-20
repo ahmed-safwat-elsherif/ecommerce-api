@@ -9,9 +9,9 @@ const ImageChunk  = require('../models/imageChunkModel')
 // router.get('/',async(req,res)=>{
 //     try {
 //         console.log("/",req.url)
-//         let { limit = 10, skip = 0 } = req.query;
-//         if (Number(limit) > 10) {
-//             limit = 10;
+//         let { limit = 15, skip = 0 } = req.query;
+//         if (Number(limit) > 15) {
+//             limit = 15;
 //         }
 //         let numOfProducts =  await Product.countDocuments().exec();
 //         let products =  await Product.find().skip(Number(skip)).limit(Number(limit)).exec();
@@ -23,13 +23,13 @@ const ImageChunk  = require('../models/imageChunkModel')
 // })
 router.get('/:pname',async(req,res)=>{
     try {
-        console.log("/",req.url)
+        console.log("pname /",req.url)
         console.log("pname: ",pname)
         let {pname} = req.params;
         console.log(pname)
-        let { limit = 5, skip = 0 } = req.query;
-        if (Number(limit) > 5) {
-            limit = 5;
+        let { limit = 15, skip = 0 } = req.query;
+        if (Number(limit) > 15) {
+            limit = 15;
         }
         let numOfProducts =  await Product.countDocuments().exec();
         let products =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(skip)).limit(Number(limit)).exec();
