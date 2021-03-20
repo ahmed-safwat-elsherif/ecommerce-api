@@ -31,7 +31,7 @@ router.get('/:pname',async(req,res)=>{
         if (Number(limit) > 15) {
             limit = 15;
         }
-        let numOfProducts =  await Product.countDocuments({name:pname}).exec();
+        let numOfProducts =  await Product.countDocuments({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).exec();
         let products =  await Product.find({name:{ $regex: new RegExp("^" + pname.toLowerCase(), "i") }}).skip(Number(skip)).limit(Number(limit)).exec();
         if(!products) throw new Error(`Unabled to find any product to display`)
         res.status(200).send({ length: numOfProducts, products })
