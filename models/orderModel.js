@@ -23,12 +23,10 @@ const orderSchema = Schema({
     },
     deliverAt:{
         from:{
-            type:Date,
-            default:Date.now()
+            type:Date
         },
         to:{
-            type:Date,
-            default:Date.now()
+            type:Date
         }
     }
 },

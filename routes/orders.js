@@ -17,7 +17,23 @@ router.post('/',authenticate,async(req,res)=>{
             toNumber.push({productId:product.productId, quantity:Number(product.quantity)})
         })
         products = toNumber;
-        let order = await Order.create({products,userId,note,address,orderStatus:"pending",paymentMethod:"in cash"})
+        
+        let from = new Date();
+        let to  = new Date();
+        from.setDate(from.getDate()+1)
+        to.setDate(to.getDate()+4)
+        let order = await Order.create({
+            products,
+            userId,
+            note,
+            address,
+            orderStatus:"pending",
+            paymentMethod:"in cash",
+            deliverAt:{
+                from,
+                to
+            }
+        })
         res.status(200).send({order,message:"Order is successfully sent", success:true})
     } catch (error) {
         res.status(401).send({message:"Unable to create an order", success:false, error})
