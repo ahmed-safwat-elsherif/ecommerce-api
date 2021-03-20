@@ -2,10 +2,10 @@ const config = require('./config/config');
 const mongoose = require('mongoose');
 
 mongoose.connect(config.mongoURL, {
-    useNewUrlParser: true, 
     useUnifiedTopology: true,
+    useNewUrlParser: true, 
     useFindAndModify:false,
-    useCreateIndex:true
+    useCreateIndex:true,
 });
 const connection = mongoose.connection;
 
