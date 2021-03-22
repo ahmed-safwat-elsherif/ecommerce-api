@@ -142,6 +142,7 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
         let {_id} = req.params;
         let userId = req.signData._id;
         let {rating} = req.body;
+        console.log("new rating: ",rating)
         let product = await Product.findOne({_id});
         let found = product.reviews.find(review => review.userId == userId);
         console.log("RATING PRODUCT with ID",_id)
