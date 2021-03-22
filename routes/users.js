@@ -82,12 +82,12 @@ router.get('/confirmation/:token', async (req, res) => {
         const user = await User.findOneAndUpdate({ _id }, { confirmation: true }, {
             new: true
         }).exec();
-        res.redirect('https://amnesia-ecommerce.herokuapp.com/confirmed')
+        res.redirect('https://amnesia-ecommerce.herokuapp.com/confirmedRegister')
         delete user.password;
         res.status(200).send({ user, success: true, message: "User is confirmed!" })
     } catch (error) {
         res.status(400).send({ error, success: false, message: "Confirmation is denied!" })
-        res.redirect('http:localhost:4200/failed')
+        res.redirect('https://amnesia-ecommerce.herokuapp.com/failed')
 
     }
 })
