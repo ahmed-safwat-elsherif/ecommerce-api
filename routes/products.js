@@ -180,7 +180,9 @@ router.post('/rating/:_id',authenticate,async(req,res)=>{
             console.log(0,product.reviews)
             let toNumbers = product.reviews.map(review=>Number(review.rating));
             console.log(1,toNumbers)
-            let newRating = (toNumbers.reduce((tot,num)=>tot+num)+rating) / (numberOfreviews+1);
+            console.log(toNumbers.reduce((tot,num)=>tot+num))
+            console.log("toNumbers.reduce((tot,num)=>tot+num)",toNumbers.reduce((tot,num)=>tot+num))
+            let newRating = (toNumbers.reduce((tot,num)=>tot+num, 0)+rating) / (numberOfreviews+1);
             console.log(2,newRating)
             newRating = Math.round(newRating)
             console.log(3,newRating)
