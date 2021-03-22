@@ -82,7 +82,7 @@ router.get('/confirmation/:token', async (req, res) => {
         const user = await User.findOneAndUpdate({ _id }, { confirmation: true }, {
             new: true
         }).exec();
-        res.redirect('http:localhost:4200/confirmed')
+        res.redirect('https://amnesia-ecommerce.herokuapp.com/confirmed')
         delete user.password;
         res.status(200).send({ user, success: true, message: "User is confirmed!" })
     } catch (error) {
@@ -215,7 +215,7 @@ router.post('/forgetPassword', async (req, res) => {
             return res.status(404).send({ message: "Email is not registered", success: false })
         }
         const token = jwt.sign({ _id: user._id }, 'the-attack-titan'); // expiration json web token in 2 hours
-        const forgetPassword = `http://localhost:4200/resetpassword/${token}`;
+        const forgetPassword = `https://amnesia-ecommerce.herokuapp.com/resetpassword/${token}`;
         const message = `
         <div style="padding:30px 0 ;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;text-align: center; background-color:#eae3c8; color:#383e56; border-radius: 5px;">
             <p style="font-size:1.3rem; font-weight:bold">
