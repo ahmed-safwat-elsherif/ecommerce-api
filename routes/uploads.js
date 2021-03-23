@@ -14,7 +14,7 @@ const Product = require('../models/productModel')
 const connection = require('../db-connection');
 const { authenticate, adminAuthenticate } = require('../auth/user');
 
-
+// Preparing a gridFS Storage to store files (images) in MongoDB
 const storage = new GridFsStorage({
     url: config.mongoURL,
     file: (req, file) => {
@@ -43,20 +43,11 @@ connection.once('open', () => {
 // POST the profile image
 router.post('/user', authenticate, upload.single('image'), async (req, res) => {
     try {
-        console.log("Uploading ...... ")
-        let { filename } = req.file;
         let { _id } = req.signData;
         let image = await Image.findOne({ filename: req.file.filename });
-        let date = new Date(image.uploadDate)
-        console.log(image)
-        // let userOld = await User.findOne({_id});
-        // if(userOld.profileImage.length >= 0){
-        //     let imageOld = await Image.find({filename:userOld.profileImage})
-        // }
         let user = await User.findOneAndUpdate({ _id }, { profileImage: image.filename }, {
             new: true
-        }).exec()
-        console.log('TIME NOW: ', date.getHours() - 12, ':', date.getMinutes())
+        }).exec();
         res.status(200).send({ user, image, message: "Uploaded successfully", success: true })
     } catch (error) {
         res.status(404).send({ error, message: "Unable to upload", success: false })
@@ -66,20 +57,13 @@ router.post('/user', authenticate, upload.single('image'), async (req, res) => {
 // POST the product image
 router.post('/product/:productId', authenticate, adminAuthenticate, upload.single('image'), async (req, res) => {
     try {
-        console.log("Uploading ...... ")
-        console.log(req)
         let { filename } = req.file;
-        console.log(filename)
         let { productId } = req.params;
-        console.log(productId)
         let image = await Image.findOne({ filename: req.file.filename });
         let date = new Date(image.uploadDate)
-        console.log(image)
         let product = await Product.findOneAndUpdate({ _id:productId }, { image: image.filename }, {
             new: true
         }).exec()
-        console.log(product)
-        console.log('TIME NOW: ', date.getHours() - 12, ':', date.getMinutes())
         res.status(200).send({ product, image, message: "Uploaded successfully", success: true })
     } catch (error) {
         res.status(404).send({ error, message: "Unable to upload", success: false })
@@ -88,9 +72,7 @@ router.post('/product/:productId', authenticate, adminAuthenticate, upload.singl
 
 //To get and show any image
 router.get('/show/:filename', (req, res) => {
-    console.log(req.params.filename)
     gfs.files.find({ filename: req.params.filename }).toArray((err, file) => {
-        console.log(file[0])
         if (!file[0] || file[0].length === 0) {
             return res.status(404).send({ err: 'No file exists' })
         }
